@@ -18,6 +18,16 @@ from boj_ts_api import (
     SeriesValues,
 )
 
+from pyboj._config import Database
+from pyboj._domains import (
+    Collateralization,
+    ExchangeRate,
+    IndexType,
+    InterestRate,
+    PriceIndex,
+    RateCategory,
+    RateType,
+)
 from pyboj._helpers.csv import csv_to_dataframe
 
 __all__ = [
@@ -27,12 +37,20 @@ __all__ = [
     "BOJRequestError",
     "BOJValidationError",
     "Client",
+    "Collateralization",
     "DataResponse",
+    "Database",
+    "ExchangeRate",
     "Format",
     "Frequency",
+    "IndexType",
+    "InterestRate",
     "Lang",
     "MetadataRecord",
     "MetadataResponse",
+    "PriceIndex",
+    "RateCategory",
+    "RateType",
     "ResponseEnvelope",
     "SeriesResult",
     "SeriesValues",

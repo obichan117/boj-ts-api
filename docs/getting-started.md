@@ -6,14 +6,20 @@
 pip install boj-ts-api
 ```
 
+Or for the beginner-friendly wrapper with optional pandas support:
+
+```bash
+pip install pyboj[pandas]
+```
+
 ## Basic Usage
 
 ### Fetch Data by Series Code
 
 ```python
-from boj_ts_api import BOJClient
+from boj_ts_api import Client
 
-with BOJClient(lang="en") as client:
+with Client(lang="en") as client:
     resp = client.get_data_code(
         db="CO",
         code="TK99F1000601GCQ01000",
@@ -29,7 +35,7 @@ with BOJClient(lang="en") as client:
 For large result sets, use the iterator methods to automatically follow pagination:
 
 ```python
-with BOJClient(lang="en") as client:
+with Client(lang="en") as client:
     for series in client.iter_data_code(db="CO", code="TK99F1000601GCQ01000"):
         print(series.SERIES_CODE, len(series.VALUES.SURVEY_DATES), "data points")
 ```
@@ -37,7 +43,7 @@ with BOJClient(lang="en") as client:
 ### Fetch Data by Layer
 
 ```python
-with BOJClient(lang="en") as client:
+with Client(lang="en") as client:
     resp = client.get_data_layer(db="FM08", frequency="D", layer="1,1")
     for series in resp.RESULTSET:
         print(series.SERIES_CODE, series.VALUES.VALUES[:5])
@@ -46,7 +52,7 @@ with BOJClient(lang="en") as client:
 ### Metadata
 
 ```python
-with BOJClient(lang="en") as client:
+with Client(lang="en") as client:
     meta = client.get_metadata(db="FM08")
     for rec in meta.RESULTSET:
         print(rec.SERIES_CODE, rec.FREQUENCY, rec.NAME_OF_TIME_SERIES)
@@ -55,9 +61,9 @@ with BOJClient(lang="en") as client:
 ### CSV and pandas
 
 ```python
-from boj_ts_api import BOJClient, csv_to_dataframe
+from pyboj import Client, csv_to_dataframe
 
-with BOJClient(lang="en") as client:
+with Client(lang="en") as client:
     csv_text = client.get_data_code_csv(
         db="CO", code="TK99F1000601GCQ01000",
         start_date="202401", end_date="202404",
@@ -70,34 +76,25 @@ with BOJClient(lang="en") as client:
 
 ```python
 import asyncio
-from boj_ts_api import AsyncBOJClient
+from boj_ts_api import AsyncClient
 
 async def main():
-    async with AsyncBOJClient(lang="en") as client:
+    async with AsyncClient(lang="en") as client:
         resp = await client.get_data_code(db="CO", code="TK99F1000601GCQ01000")
         print(resp.RESULTSET[0].SERIES_CODE)
 
 asyncio.run(main())
 ```
 
-## CLI
+## Finding Series Codes
 
-Install the CLI extra:
+To discover available series codes, use the [BOJ Time-Series Search Site](https://www.stat-search.boj.or.jp/) or the metadata endpoint:
 
-```bash
-pip install boj-ts-api[cli]
+```python
+with Client(lang="en") as client:
+    meta = client.get_metadata(db="FM08")
+    for rec in meta.RESULTSET[:5]:
+        print(f"{rec.SERIES_CODE}: {rec.NAME_OF_TIME_SERIES}")
 ```
 
-```bash
-# Fetch data by code
-bojts get-data-code --db CO --code TK99F1000601GCQ01000
-
-# Fetch metadata
-bojts get-metadata --db FM08
-
-# CSV output
-bojts get-data-code --db CO --code TK99F1000601GCQ01000 --format csv
-
-# Japanese language
-bojts --lang jp get-metadata --db FM08
-```
+See the [Upstream API Reference](boj-api.md) for details on all available parameters and database codes.

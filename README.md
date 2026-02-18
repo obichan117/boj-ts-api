@@ -6,6 +6,8 @@ Python client for the [Bank of Japan Time-Series Statistics API](https://www.sta
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 [![Python 3.10+](https://img.shields.io/badge/python-3.10+-blue.svg)](https://www.python.org/downloads/)
 
+Wraps the official BOJ API ([announced 2026-02-18](https://www.boj.or.jp/statistics/outline/notice_2026/not260218a.htm)) for machine-readable access to Japan's central bank time-series data.
+
 ## Features
 
 - **Sync & async** clients with identical API surface (`Client` / `AsyncClient`)
@@ -14,22 +16,17 @@ Python client for the [Bank of Japan Time-Series Statistics API](https://www.sta
 - **CSV support** with optional pandas DataFrame conversion
 - **PEP 561** typed package
 
-## Installation
+## Packages
 
-```bash
-pip install pyboj
-```
-
-Optional extras:
-
-```bash
-pip install pyboj[pandas]   # pandas DataFrame support
-```
+| Package | Install | Description |
+|---------|---------|-------------|
+| **boj-ts-api** | `pip install boj-ts-api` | Low-level typed API client |
+| **pyboj** | `pip install pyboj` | Beginner-friendly wrapper with pandas support |
 
 ## Quick Start
 
 ```python
-from pyboj._api import Client
+from boj_ts_api import Client
 
 with Client(lang="en") as client:
     # Fetch CPI data for Tokyo
@@ -56,7 +53,7 @@ with Client(lang="en") as client:
 
 ```python
 import asyncio
-from pyboj._api import AsyncClient
+from boj_ts_api import AsyncClient
 
 async def main():
     async with AsyncClient(lang="en") as client:
@@ -69,8 +66,7 @@ asyncio.run(main())
 ### CSV + pandas
 
 ```python
-from pyboj._api import Client
-from pyboj import csv_to_dataframe
+from pyboj import Client, csv_to_dataframe
 
 with Client(lang="en") as client:
     csv_text = client.get_data_code_csv(db="CO", code="TK99F1000601GCQ01000")
@@ -80,11 +76,23 @@ with Client(lang="en") as client:
 
 ## API Endpoints
 
-| Method | Endpoint | Client Method |
-|--------|----------|---------------|
-| Code API | `/api/v1/getDataCode` | `get_data_code()`, `iter_data_code()`, `get_data_code_csv()` |
-| Layer API | `/api/v1/getDataLayer` | `get_data_layer()`, `iter_data_layer()`, `get_data_layer_csv()` |
-| Metadata API | `/api/v1/getMetadata` | `get_metadata()`, `get_metadata_csv()` |
+| Endpoint | Client Method | Description |
+|----------|---------------|-------------|
+| `/api/v1/getDataCode` | `get_data_code()`, `iter_data_code()`, `get_data_code_csv()` | Fetch data by series code |
+| `/api/v1/getDataLayer` | `get_data_layer()`, `iter_data_layer()`, `get_data_layer_csv()` | Fetch data by hierarchy layer |
+| `/api/v1/getMetadata` | `get_metadata()`, `get_metadata_csv()` | Fetch series catalogue |
+
+## Documentation
+
+- [Getting Started](https://obichan117.github.io/boj-ts-api/getting-started/)
+- [API Reference](https://obichan117.github.io/boj-ts-api/api-reference/)
+- [Upstream BOJ API Reference](https://obichan117.github.io/boj-ts-api/boj-api/)
+- [OpenAPI Specification](openapi.yaml)
+
+## Official BOJ Resources
+
+- [BOJ API Announcement (2026-02-18)](https://www.boj.or.jp/statistics/outline/notice_2026/not260218a.htm)
+- [BOJ Time-Series Search Site](https://www.stat-search.boj.or.jp/)
 
 ## License
 

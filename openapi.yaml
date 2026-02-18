@@ -1,0 +1,381 @@
+openapi: 3.1.0
+info:
+  title: Bank of Japan Time-Series Statistics API
+  version: "1.0"
+  description: |
+    Machine-readable API for the Bank of Japan's time-series statistical data.
+
+    Announced on [2026-02-18](https://www.boj.or.jp/statistics/outline/notice_2026/not260218a.htm)
+    by the BOJ Statistics Department. Provides access to the same data available on the
+    [BOJ Time-Series Search Site](https://www.stat-search.boj.or.jp/).
+
+    **Key characteristics:**
+    - No authentication required
+    - HTTP status is always 200; errors are indicated by the `STATUS` field in the JSON body
+    - Pagination via `NEXTPOSITION` / `startPosition`
+  contact:
+    name: BOJ Economic Statistics Division
+    email: post.rsd17@boj.or.jp
+  license:
+    name: Public Data
+    url: https://www.boj.or.jp/
+
+servers:
+  - url: https://www.stat-search.boj.or.jp
+    description: BOJ Time-Series Search
+
+paths:
+  /api/v1/getDataCode:
+    get:
+      operationId: getDataCode
+      summary: Fetch time-series data by series code(s)
+      description: |
+        Retrieve time-series observations for one or more series codes.
+        Supports JSON and CSV output. Results are paginated when the response
+        exceeds API limits (max 250 series, 60,000 data points per request).
+      parameters:
+        - $ref: "#/components/parameters/db"
+        - name: code
+          in: query
+          required: true
+          description: Series code(s). Comma-separated for multiple codes.
+          schema:
+            type: string
+          example: TK99F1000601GCQ01000
+        - $ref: "#/components/parameters/format"
+        - $ref: "#/components/parameters/lang"
+        - $ref: "#/components/parameters/startDate"
+        - $ref: "#/components/parameters/endDate"
+        - $ref: "#/components/parameters/startPosition"
+      responses:
+        "200":
+          description: Always returns HTTP 200. Check `STATUS` field for actual result.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/DataResponse"
+            text/csv:
+              schema:
+                type: string
+
+  /api/v1/getDataLayer:
+    get:
+      operationId: getDataLayer
+      summary: Fetch time-series data by hierarchy layer
+      description: |
+        Retrieve time-series observations by navigating the category hierarchy.
+        Use the metadata endpoint to discover layer values for each database.
+        Max 1,250 series per request.
+      parameters:
+        - $ref: "#/components/parameters/db"
+        - name: frequency
+          in: query
+          required: true
+          description: Time-series frequency code.
+          schema:
+            $ref: "#/components/schemas/Frequency"
+          example: D
+        - name: layer
+          in: query
+          required: true
+          description: Comma-separated layer path (e.g. `1,1` for layer1=1, layer2=1).
+          schema:
+            type: string
+          example: "1,1"
+        - $ref: "#/components/parameters/format"
+        - $ref: "#/components/parameters/lang"
+        - $ref: "#/components/parameters/startDate"
+        - $ref: "#/components/parameters/endDate"
+        - $ref: "#/components/parameters/startPosition"
+      responses:
+        "200":
+          description: Always returns HTTP 200. Check `STATUS` field for actual result.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/DataResponse"
+            text/csv:
+              schema:
+                type: string
+
+  /api/v1/getMetadata:
+    get:
+      operationId: getMetadata
+      summary: Fetch series catalogue for a database
+      description: |
+        Returns metadata for all series in a database, including series codes,
+        names, units, frequency, layer positions, and date ranges.
+      parameters:
+        - $ref: "#/components/parameters/db"
+        - $ref: "#/components/parameters/format"
+        - $ref: "#/components/parameters/lang"
+      responses:
+        "200":
+          description: Always returns HTTP 200. Check `STATUS` field for actual result.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/MetadataResponse"
+            text/csv:
+              schema:
+                type: string
+
+components:
+  parameters:
+    db:
+      name: db
+      in: query
+      required: true
+      description: Database identifier (e.g. `CO` for Consumer Prices, `FM08` for Financial Markets).
+      schema:
+        type: string
+      example: CO
+
+    format:
+      name: format
+      in: query
+      required: true
+      description: Response format.
+      schema:
+        type: string
+        enum: [json, csv]
+      example: json
+
+    lang:
+      name: lang
+      in: query
+      required: true
+      description: Language for field labels and names.
+      schema:
+        type: string
+        enum: [jp, en]
+      example: en
+
+    startDate:
+      name: startDate
+      in: query
+      required: false
+      description: |
+        Start date filter. Format depends on frequency:
+        `YYYY` (annual), `YYYYH` (half), `YYYYQ` (quarterly),
+        `YYYYMM` (monthly), `YYYYMMDD` (weekly/daily).
+      schema:
+        type: string
+      example: "202401"
+
+    endDate:
+      name: endDate
+      in: query
+      required: false
+      description: End date filter. Same format rules as `startDate`.
+      schema:
+        type: string
+      example: "202404"
+
+    startPosition:
+      name: startPosition
+      in: query
+      required: false
+      description: Pagination offset from previous response's `NEXTPOSITION` value.
+      schema:
+        type: integer
+
+  schemas:
+    Frequency:
+      type: string
+      enum: [CY, FY, CH, FH, Q, M, W, D]
+      description: |
+        CY=Calendar Year, FY=Fiscal Year, CH=Calendar Half, FH=Fiscal Half,
+        Q=Quarterly, M=Monthly, W=Weekly, D=Daily
+
+    ResponseEnvelope:
+      type: object
+      required: [STATUS]
+      properties:
+        STATUS:
+          type: integer
+          description: "`200` on success, `400`/`500` on error."
+          example: 200
+        MESSAGEID:
+          type: string
+          description: Error code when STATUS is not 200 (e.g. `E0001`).
+          default: ""
+        MESSAGE:
+          type: string
+          description: Human-readable error/status message.
+          default: ""
+        DATE:
+          type: string
+          description: Server timestamp (ISO 8601 with timezone).
+          example: "2026-02-18T13:00:00.000+09:00"
+        PARAMETER:
+          type: object
+          nullable: true
+          description: Echo of the request parameters.
+        NEXTPOSITION:
+          type: integer
+          nullable: true
+          description: Pagination cursor. `null` when this is the last page.
+
+    DataResponse:
+      allOf:
+        - $ref: "#/components/schemas/ResponseEnvelope"
+        - type: object
+          properties:
+            RESULTSET:
+              type: array
+              items:
+                $ref: "#/components/schemas/SeriesResult"
+
+    MetadataResponse:
+      allOf:
+        - $ref: "#/components/schemas/ResponseEnvelope"
+        - type: object
+          properties:
+            RESULTSET:
+              type: array
+              items:
+                $ref: "#/components/schemas/MetadataRecord"
+
+    SeriesValues:
+      type: object
+      properties:
+        SURVEY_DATES:
+          type: array
+          items:
+            oneOf:
+              - type: integer
+              - type: string
+          description: Observation dates as integers (format depends on frequency).
+          example: [202401, 202402, 202403, 202404]
+        VALUES:
+          type: array
+          items:
+            oneOf:
+              - type: number
+              - type: string
+              - type: "null"
+          description: Observation values. `null` indicates missing data.
+          example: [106.9, 106.8, 107.2, 107.5]
+
+    SeriesResult:
+      type: object
+      required: [SERIES_CODE]
+      properties:
+        SERIES_CODE:
+          type: string
+          example: TK99F1000601GCQ01000
+        NAME_OF_TIME_SERIES:
+          type: string
+          nullable: true
+          example: "All Items, Ku-area of Tokyo"
+        NAME_OF_TIME_SERIES_J:
+          type: string
+          nullable: true
+          example: "東京都区部 総合"
+        UNIT:
+          type: string
+          nullable: true
+          example: CY2020=100
+        UNIT_J:
+          type: string
+          nullable: true
+        FREQUENCY:
+          type: string
+          nullable: true
+          example: M
+        CATEGORY:
+          type: string
+          nullable: true
+          example: Consumer Price Index
+        CATEGORY_J:
+          type: string
+          nullable: true
+        LAST_UPDATE:
+          oneOf:
+            - type: integer
+            - type: string
+          nullable: true
+          example: 20250520
+        VALUES:
+          $ref: "#/components/schemas/SeriesValues"
+
+    MetadataRecord:
+      type: object
+      properties:
+        SERIES_CODE:
+          type: string
+          nullable: true
+          example: "FM08'MAINAVG"
+        NAME_OF_TIME_SERIES:
+          type: string
+          nullable: true
+        NAME_OF_TIME_SERIES_J:
+          type: string
+          nullable: true
+        UNIT:
+          type: string
+          nullable: true
+        UNIT_J:
+          type: string
+          nullable: true
+        FREQUENCY:
+          type: string
+          nullable: true
+          example: D
+        CATEGORY:
+          type: string
+          nullable: true
+        CATEGORY_J:
+          type: string
+          nullable: true
+        LAYER1:
+          oneOf:
+            - type: integer
+            - type: string
+          nullable: true
+        LAYER2:
+          oneOf:
+            - type: integer
+            - type: string
+          nullable: true
+        LAYER3:
+          oneOf:
+            - type: integer
+            - type: string
+          nullable: true
+        LAYER4:
+          oneOf:
+            - type: integer
+            - type: string
+          nullable: true
+        LAYER5:
+          oneOf:
+            - type: integer
+            - type: string
+          nullable: true
+        START_OF_THE_TIME_SERIES:
+          type: string
+          nullable: true
+          example: "19850701"
+        END_OF_THE_TIME_SERIES:
+          type: string
+          nullable: true
+          example: "20251128"
+        LAST_UPDATE:
+          oneOf:
+            - type: integer
+            - type: string
+          nullable: true
+        UNIT_NOTES:
+          type: string
+          nullable: true
+        UNIT_NOTES_J:
+          type: string
+          nullable: true
+        NOTES:
+          type: string
+          nullable: true
+        NOTES_J:
+          type: string
+          nullable: true

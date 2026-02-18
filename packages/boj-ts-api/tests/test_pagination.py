@@ -4,9 +4,8 @@ from __future__ import annotations
 
 import httpx
 import respx
-
-from boj_ts_api.client.sync_client import BOJClient
-from boj_ts_api.config import BASE_URL, ENDPOINT_DATA_CODE, ENDPOINT_DATA_LAYER
+from boj_ts_api import Client
+from boj_ts_api._types.config import BASE_URL, ENDPOINT_DATA_CODE, ENDPOINT_DATA_LAYER
 
 
 class TestIterDataCode:
@@ -15,7 +14,7 @@ class TestIterDataCode:
         respx.get(f"{BASE_URL}{ENDPOINT_DATA_CODE}").mock(
             return_value=httpx.Response(200, json=data_code_json)
         )
-        with BOJClient(lang="en") as client:
+        with Client(lang="en") as client:
             results = list(client.iter_data_code(db="CO", code="TK99F1000601GCQ01000"))
 
         assert len(results) == 1
@@ -29,7 +28,7 @@ class TestIterDataCode:
                 httpx.Response(200, json=data_code_page2_json),
             ]
         )
-        with BOJClient(lang="en") as client:
+        with Client(lang="en") as client:
             results = list(client.iter_data_code(db="CO", code="TK99F1000601GCQ01000"))
 
         assert route.call_count == 2
@@ -46,7 +45,7 @@ class TestIterDataLayer:
         respx.get(f"{BASE_URL}{ENDPOINT_DATA_LAYER}").mock(
             return_value=httpx.Response(200, json=data_layer_json)
         )
-        with BOJClient(lang="en") as client:
+        with Client(lang="en") as client:
             results = list(client.iter_data_layer(db="FM08", frequency="D", layer="1,1"))
 
         assert len(results) == 1

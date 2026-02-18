@@ -1,36 +1,43 @@
-# boj-ts-api
+# pyboj (monorepo)
 
-Python client for the Bank of Japan Time-Series Statistics API.
+Two-package monorepo for the Bank of Japan Time-Series Statistics API.
 
 ## Quick Start
 
 ```bash
-uv sync --all-extras          # Install all deps
-uv run pytest --tb=short      # Run tests
-uv run ruff check boj_ts_api/ # Lint
-uv run mkdocs build --strict  # Build docs
-uv run mkdocs serve           # Serve docs locally
+uv sync --all-extras                              # Install all deps
+uv run pytest --tb=short                          # Run all tests
+uv run ruff check packages/                       # Lint all packages
+uv run pytest packages/boj-ts-api/tests --tb=short  # Test boj-ts-api only
+uv run pytest packages/pyboj/tests --tb=short        # Test pyboj only
 ```
 
-## Architecture
+## Architecture (Monorepo)
 
 ```
-boj_ts_api/
-├── config.py          # BASE_URL, enums (Frequency, Lang, Format), limits
-├── exceptions.py      # BOJError → BOJAPIError, BOJRequestError, BOJValidationError
-├── models/            # Pydantic v2 response models
-│   ├── base.py        # Shared base model config
-│   ├── response.py    # DataResponse, MetadataResponse (envelopes)
-│   ├── series.py      # SeriesResult, SeriesValues
-│   └── metadata.py    # MetadataRecord
-├── client/
-│   ├── _transport.py  # httpx GET wrapper (SyncTransport + AsyncTransport)
-│   ├── _parse.py      # JSON → model validation, error detection
-│   ├── sync_client.py # BOJClient
-│   └── async_client.py# AsyncBOJClient
-├── csv_helper.py      # csv_to_dataframe() (optional pandas)
-└── cli.py             # Click CLI: bojts
+packages/
+├── boj-ts-api/                  # LOW-LEVEL: generic API client (pip install boj-ts-api)
+│   ├── boj_ts_api/
+│   │   ├── __init__.py          #   exports Client, AsyncClient, models, enums, exceptions
+│   │   ├── _types/              #   data contracts
+│   │   │   ├── config.py        #     BASE_URL, endpoints, enums, limits
+│   │   │   ├── exceptions.py    #     BOJError hierarchy
+│   │   │   └── models/          #     Pydantic response schemas
+│   │   ├── _transport.py        #   httpx wrappers
+│   │   ├── _parse.py            #   JSON → Pydantic
+│   │   ├── client.py            #   Client (sync)
+│   │   └── async_client.py      #   AsyncClient
+│   └── tests/
+│
+└── pyboj/                       # HIGH-LEVEL: friendly wrapper (pip install pyboj)
+    ├── pyboj/
+    │   ├── __init__.py          #   re-exports from boj_ts_api + helpers
+    │   └── _helpers/            #   utility tools
+    │       └── csv.py           #     DataFrame conversion
+    └── tests/
 ```
+
+**Dependency:** `pyboj → boj-ts-api` (enforced by pip)
 
 **Core principle: Fetch vs Parse separation.**
 - `_transport.py` does I/O (returns raw httpx.Response)
@@ -39,9 +46,10 @@ boj_ts_api/
 
 ## Key Files
 
-- `pyproject.toml` — project config, deps, tool settings
-- `tests/conftest.py` — shared fixtures, fixture loading
-- `tests/fixtures/` — recorded JSON/CSV responses (no network in tests)
+- `pyproject.toml` — workspace root (uv workspace config, shared tool settings)
+- `packages/boj-ts-api/pyproject.toml` — low-level package config
+- `packages/pyboj/pyproject.toml` — high-level package config
+- `packages/boj-ts-api/tests/fixtures/` — recorded JSON/CSV responses (no network in tests)
 
 ## Testing
 
@@ -53,6 +61,6 @@ uv run pytest --tb=short -v
 
 ## Dependencies
 
-- Core: `httpx`, `pydantic>=2.0`
-- Optional: `pandas` (`[pandas]`), `click` (`[cli]`)
+- boj-ts-api: `httpx`, `pydantic>=2.0`
+- pyboj: `boj-ts-api`, optional `pandas`
 - Dev: `pytest`, `pytest-asyncio`, `respx`, `ruff`, `mkdocs`

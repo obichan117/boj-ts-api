@@ -2,7 +2,7 @@
 
 from __future__ import annotations
 
-from boj_ts_api.models import (
+from boj_ts_api import (
     DataResponse,
     MetadataRecord,
     MetadataResponse,

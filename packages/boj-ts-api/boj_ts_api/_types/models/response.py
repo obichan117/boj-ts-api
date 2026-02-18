@@ -6,9 +6,9 @@ from typing import Any
 
 from pydantic import Field
 
-from boj_ts_api.models.base import BOJBaseModel
-from boj_ts_api.models.metadata import MetadataRecord
-from boj_ts_api.models.series import SeriesResult
+from boj_ts_api._types.models.base import BOJBaseModel
+from boj_ts_api._types.models.metadata import MetadataRecord
+from boj_ts_api._types.models.series import SeriesResult
 
 
 class DataResponse(BOJBaseModel):

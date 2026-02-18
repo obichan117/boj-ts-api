@@ -1,8 +1,8 @@
-"""Tests for csv_helper."""
+"""Tests for CSV helper."""
 
 from __future__ import annotations
 
-from boj_ts_api.csv_helper import csv_to_dataframe
+from pyboj import csv_to_dataframe
 
 
 class TestCsvToDataframe:

@@ -4,7 +4,7 @@ from __future__ import annotations
 
 from pydantic import Field
 
-from boj_ts_api.models.base import BOJBaseModel
+from boj_ts_api._types.models.base import BOJBaseModel
 
 
 class SeriesValues(BOJBaseModel):

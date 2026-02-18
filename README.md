@@ -1,40 +1,37 @@
-# boj-ts-api
+# pyboj
 
 Python client for the [Bank of Japan Time-Series Statistics API](https://www.stat-search.boj.or.jp/).
 
-[![PyPI](https://img.shields.io/pypi/v/boj-ts-api)](https://pypi.org/project/boj-ts-api/)
+[![PyPI](https://img.shields.io/pypi/v/pyboj)](https://pypi.org/project/pyboj/)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 [![Python 3.10+](https://img.shields.io/badge/python-3.10+-blue.svg)](https://www.python.org/downloads/)
 
 ## Features
 
-- **Sync & async** clients with identical API surface (`BOJClient` / `AsyncBOJClient`)
+- **Sync & async** clients with identical API surface (`Client` / `AsyncClient`)
 - **Pydantic v2** models for type-safe, validated responses
 - **Auto-pagination** via `iter_data_code()` / `iter_data_layer()` generators
 - **CSV support** with optional pandas DataFrame conversion
-- **CLI tool** (`bojts`) for quick terminal access
 - **PEP 561** typed package
 
 ## Installation
 
 ```bash
-pip install boj-ts-api
+pip install pyboj
 ```
 
 Optional extras:
 
 ```bash
-pip install boj-ts-api[pandas]   # pandas DataFrame support
-pip install boj-ts-api[cli]      # CLI tool
-pip install boj-ts-api[pandas,cli]  # both
+pip install pyboj[pandas]   # pandas DataFrame support
 ```
 
 ## Quick Start
 
 ```python
-from boj_ts_api import BOJClient
+from pyboj._api import Client
 
-with BOJClient(lang="en") as client:
+with Client(lang="en") as client:
     # Fetch CPI data for Tokyo
     resp = client.get_data_code(
         db="CO",
@@ -59,10 +56,10 @@ with BOJClient(lang="en") as client:
 
 ```python
 import asyncio
-from boj_ts_api import AsyncBOJClient
+from pyboj._api import AsyncClient
 
 async def main():
-    async with AsyncBOJClient(lang="en") as client:
+    async with AsyncClient(lang="en") as client:
         resp = await client.get_data_code(db="CO", code="TK99F1000601GCQ01000")
         print(resp.RESULTSET[0].VALUES.VALUES)
 
@@ -72,20 +69,13 @@ asyncio.run(main())
 ### CSV + pandas
 
 ```python
-from boj_ts_api import BOJClient, csv_to_dataframe
+from pyboj._api import Client
+from pyboj import csv_to_dataframe
 
-with BOJClient(lang="en") as client:
+with Client(lang="en") as client:
     csv_text = client.get_data_code_csv(db="CO", code="TK99F1000601GCQ01000")
     df = csv_to_dataframe(csv_text)
     print(df.head())
-```
-
-### CLI
-
-```bash
-bojts get-data-code --db CO --code TK99F1000601GCQ01000
-bojts get-metadata --db FM08 --format csv
-bojts --lang jp get-data-layer --db FM08 --frequency D --layer "1,1"
 ```
 
 ## API Endpoints
@@ -95,10 +85,6 @@ bojts --lang jp get-data-layer --db FM08 --frequency D --layer "1,1"
 | Code API | `/api/v1/getDataCode` | `get_data_code()`, `iter_data_code()`, `get_data_code_csv()` |
 | Layer API | `/api/v1/getDataLayer` | `get_data_layer()`, `iter_data_layer()`, `get_data_layer_csv()` |
 | Metadata API | `/api/v1/getMetadata` | `get_metadata()`, `get_metadata_csv()` |
-
-## Documentation
-
-Full documentation: [https://obichan117.github.io/boj-ts-api/](https://obichan117.github.io/boj-ts-api/)
 
 ## License
 

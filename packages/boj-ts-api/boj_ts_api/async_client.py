@@ -5,25 +5,25 @@ from __future__ import annotations
 from collections.abc import AsyncIterator
 from typing import Any
 
-from boj_ts_api.client._parse import parse_data_response, parse_metadata_response
-from boj_ts_api.client._transport import AsyncTransport
-from boj_ts_api.client.sync_client import _set_optional, _validate_required
-from boj_ts_api.config import (
+from boj_ts_api._parse import parse_data_response, parse_metadata_response
+from boj_ts_api._transport import AsyncTransport
+from boj_ts_api._types.config import (
     ENDPOINT_DATA_CODE,
     ENDPOINT_DATA_LAYER,
     ENDPOINT_METADATA,
     Format,
 )
-from boj_ts_api.models.response import DataResponse, MetadataResponse
-from boj_ts_api.models.series import SeriesResult
+from boj_ts_api._types.models.response import DataResponse, MetadataResponse
+from boj_ts_api._types.models.series import SeriesResult
+from boj_ts_api.client import _set_optional, _validate_required
 
 
-class AsyncBOJClient:
+class AsyncClient:
     """Asynchronous client for the Bank of Japan Time-Series API.
 
     Usage::
 
-        async with AsyncBOJClient(lang="en") as client:
+        async with AsyncClient(lang="en") as client:
             resp = await client.get_data_code(db="CO", code="TK99F1000601GCQ01000")
     """
 
@@ -41,7 +41,7 @@ class AsyncBOJClient:
 
     # -- Context manager --
 
-    async def __aenter__(self) -> AsyncBOJClient:
+    async def __aenter__(self) -> AsyncClient:
         return self
 
     async def __aexit__(self, *exc: object) -> None:

@@ -5,25 +5,25 @@ from __future__ import annotations
 from collections.abc import Iterator
 from typing import Any
 
-from boj_ts_api.client._parse import parse_data_response, parse_metadata_response
-from boj_ts_api.client._transport import SyncTransport
-from boj_ts_api.config import (
+from boj_ts_api._parse import parse_data_response, parse_metadata_response
+from boj_ts_api._transport import SyncTransport
+from boj_ts_api._types.config import (
     ENDPOINT_DATA_CODE,
     ENDPOINT_DATA_LAYER,
     ENDPOINT_METADATA,
     Format,
 )
-from boj_ts_api.exceptions import BOJValidationError
-from boj_ts_api.models.response import DataResponse, MetadataResponse
-from boj_ts_api.models.series import SeriesResult
+from boj_ts_api._types.exceptions import BOJValidationError
+from boj_ts_api._types.models.response import DataResponse, MetadataResponse
+from boj_ts_api._types.models.series import SeriesResult
 
 
-class BOJClient:
+class Client:
     """Synchronous client for the Bank of Japan Time-Series API.
 
     Usage::
 
-        with BOJClient(lang="en") as client:
+        with Client(lang="en") as client:
             resp = client.get_data_code(db="CO", code="TK99F1000601GCQ01000")
     """
 
@@ -41,7 +41,7 @@ class BOJClient:
 
     # -- Context manager --
 
-    def __enter__(self) -> BOJClient:
+    def __enter__(self) -> Client:
         return self
 
     def __exit__(self, *exc: object) -> None:

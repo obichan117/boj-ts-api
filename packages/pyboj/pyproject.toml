@@ -1,0 +1,40 @@
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[project]
+name = "pyboj"
+version = "0.1.0"
+description = "Beginner-friendly Python client for the Bank of Japan Time-Series Statistics API"
+readme = "README.md"
+license = "MIT"
+requires-python = ">=3.10"
+authors = [{ name = "obichan117" }]
+keywords = ["boj", "bank-of-japan", "statistics", "api", "time-series", "pyboj"]
+classifiers = [
+    "Development Status :: 4 - Beta",
+    "Intended Audience :: Developers",
+    "Intended Audience :: Financial and Insurance Industry",
+    "License :: OSI Approved :: MIT License",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Programming Language :: Python :: 3.13",
+    "Typing :: Typed",
+]
+dependencies = [
+    "boj-ts-api",
+]
+
+[project.optional-dependencies]
+pandas = ["pandas>=2.0"]
+
+[project.urls]
+Repository = "https://github.com/obichan117/pyboj"
+
+[tool.uv.sources]
+boj-ts-api = { workspace = true }
+
+[tool.hatch.build.targets.wheel]
+packages = ["pyboj"]

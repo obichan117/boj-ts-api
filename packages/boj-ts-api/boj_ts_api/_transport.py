@@ -6,8 +6,8 @@ from typing import Any
 
 import httpx
 
-from boj_ts_api.config import BASE_URL
-from boj_ts_api.exceptions import BOJRequestError
+from boj_ts_api._types.config import BASE_URL
+from boj_ts_api._types.exceptions import BOJRequestError
 
 
 class SyncTransport:

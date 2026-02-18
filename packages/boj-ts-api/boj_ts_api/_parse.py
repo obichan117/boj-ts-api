@@ -6,8 +6,8 @@ from typing import Any
 
 import httpx
 
-from boj_ts_api.exceptions import BOJAPIError, BOJRequestError
-from boj_ts_api.models.response import DataResponse, MetadataResponse
+from boj_ts_api._types.exceptions import BOJAPIError, BOJRequestError
+from boj_ts_api._types.models.response import DataResponse, MetadataResponse
 
 
 def parse_data_response(response: httpx.Response) -> DataResponse:

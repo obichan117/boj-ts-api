@@ -40,6 +40,15 @@ _INDEX_TYPE_PATTERNS: list[tuple[str, IndexType]] = [
 _BASE_YEAR_RE = re.compile(r"((?:CY|FY)\d{4})")
 
 
+def _detect_index_type(name: str, category: str) -> IndexType:
+    """Detect the index type from a BOJ series name and category."""
+    for text in (name, category):
+        for pattern, it in _INDEX_TYPE_PATTERNS:
+            if re.search(pattern, text):
+                return it
+    return IndexType.OTHER
+
+
 class PriceIndex(_DomainSeries):
     """Domain wrapper for price index series (PR01-PR04)."""
 
@@ -49,11 +58,7 @@ class PriceIndex(_DomainSeries):
     @property
     def index_type(self) -> IndexType:
         """Classified index type based on the English series name and category."""
-        for text in (self.name or "", self.category or ""):
-            for pattern, it in _INDEX_TYPE_PATTERNS:
-                if re.search(pattern, text):
-                    return it
-        return IndexType.OTHER
+        return _detect_index_type(self.name or "", self.category or "")
 
     @property
     def base_year(self) -> str | None:

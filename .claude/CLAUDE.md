@@ -6,10 +6,10 @@ Two-package monorepo for the Bank of Japan Time-Series Statistics API.
 
 ```bash
 uv sync --all-extras                              # Install all deps
-uv run pytest --tb=short                          # Run all tests
+uv run python -m pytest --tb=short                # Run all tests
 uv run ruff check packages/                       # Lint all packages
-uv run pytest packages/boj-ts-api/tests --tb=short  # Test boj-ts-api only
-uv run pytest packages/pyboj/tests --tb=short        # Test pyboj only
+uv run python -m pytest packages/boj-ts-api/tests --tb=short  # Test boj-ts-api only
+uv run python -m pytest packages/pyboj/tests --tb=short        # Test pyboj only
 ```
 
 ## Architecture (Monorepo)
@@ -33,7 +33,20 @@ packages/
 │
 └── pyboj/                       # HIGH-LEVEL: friendly wrapper (pip install pyboj)
     ├── pyboj/
-    │   ├── __init__.py          #   re-exports from boj_ts_api + helpers
+    │   ├── __init__.py          #   re-exports BOJ, Series, all enums, low-level types
+    │   ├── _boj.py              #   BOJ client — 13 typed domain methods
+    │   ├── _config.py           #   Database enum (43 databases)
+    │   ├── _utils.py            #   frequency_matches helper
+    │   ├── _domains/            #   domain wrapper objects
+    │   │   ├── _base.py         #     Series base class (dates, values, to_dataframe)
+    │   │   ├── exchange_rate.py #     ExchangeRate, Currency, RateType
+    │   │   ├── interest_rate.py #     InterestRate, RateCategory, Collateralization
+    │   │   ├── price_index.py   #     PriceIndex, IndexType
+    │   │   ├── tankan.py        #     Tankan, TankanIndustry/Size/Item/SeriesType/Timing
+    │   │   ├── balance_of_payments.py  # BalanceOfPayments, BopAccount
+    │   │   ├── money_deposit.py #     MoneyDeposit, MonetaryComponent, Adjustment
+    │   │   └── loan.py          #     Loan, IndustrySector
+    │   ├── _parsing/            #   date parsing
     │   └── _helpers/            #   utility tools
     │       └── csv.py           #     DataFrame conversion
     └── tests/
@@ -41,25 +54,27 @@ packages/
 
 **Dependency:** `pyboj → boj-ts-api` (enforced by pip)
 
-**Core principle: Fetch vs Parse separation.**
-- `_transport.py` does I/O (returns raw httpx.Response)
-- `_parse.py` transforms data (returns Pydantic models)
-- `_base_client.py` builds params and validates
-- Client modules compose all three (thin wrappers)
+**Core principles:**
+- Fetch vs Parse separation (transport → parse → client)
+- Metadata-driven filtering: BOJ client fetches metadata, filters by enums, batches codes
+- Detection functions: standalone `_detect_*()` functions used by both wrappers and filters
+- `Database` enum str() returns "Database.X" in Python 3.11+; use `.value` for API calls
 
 ## Key Files
 
 - `pyproject.toml` — workspace root (uv workspace config, shared tool settings)
 - `packages/boj-ts-api/pyproject.toml` — low-level package config
 - `packages/pyboj/pyproject.toml` — high-level package config
+- `packages/pyboj/pyboj/_boj.py` — **BOJ high-level client** (main entry point)
 - `packages/boj-ts-api/tests/fixtures/` — recorded JSON/CSV responses (no network in tests)
 
 ## Testing
 
 All tests use `respx` to mock httpx calls. No network access in tests.
+**Important:** Use `uv run python -m pytest` (not `uv run pytest`) for correct module resolution.
 
 ```bash
-uv run pytest --tb=short -v
+uv run python -m pytest --tb=short -v
 ```
 
 ## Dependencies

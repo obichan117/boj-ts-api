@@ -11,8 +11,8 @@ if TYPE_CHECKING:
     from boj_ts_api import SeriesResult
 
 
-class _DomainSeries:
-    """Shared functionality for domain wrapper objects.
+class Series:
+    """Base class for domain wrapper objects.
 
     Wraps a :class:`~boj_ts_api.SeriesResult` and provides parsed
     dates, cleaned numeric values, and optional DataFrame conversion.
@@ -106,3 +106,7 @@ class _DomainSeries:
         cls = type(self).__name__
         n = len(self._result.VALUES.SURVEY_DATES)
         return f"{cls}(series_code={self.series_code!r}, name={self.name!r}, observations={n})"
+
+
+# Backward-compatible alias for internal imports
+_DomainSeries = Series

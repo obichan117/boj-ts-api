@@ -6,11 +6,14 @@ This library wraps the official BOJ API announced on [February 18, 2026](https:/
 
 ## Features
 
-- **Sync & async** clients with identical API surface (`Client` / `AsyncClient`)
+- **`BOJ` client** — typed domain methods for all 13 BOJ categories (43 databases), no magic strings
+- **Enum-driven filtering** — `Currency`, `RateType`, `TankanIndustry`, `BopAccount`, `IndustrySector`, etc.
+- **Domain wrappers** — `ExchangeRate`, `InterestRate`, `PriceIndex`, `Tankan`, `BalanceOfPayments`, `MoneyDeposit`, `Loan`, and more
+- **Metadata-driven** — auto-fetches metadata and filters series by your criteria
+- **Sync & async** low-level clients with identical API surface (`Client` / `AsyncClient`)
 - **Pydantic v2** models for type-safe, validated responses
 - **Auto-pagination** via `iter_data_code()` / `iter_data_layer()` generators
-- **CSV support** with optional pandas DataFrame conversion
-- **Domain wrappers** — `ExchangeRate`, `InterestRate`, `PriceIndex` with parsed dates, typed values, and domain-specific properties
+- **CSV + pandas** support with `to_dataframe()` and `csv_to_dataframe()`
 - **Database enum** — named constants for all BOJ database codes (`Database.EXCHANGE_RATES` instead of `"FM08"`)
 - **PEP 561** typed package
 
@@ -20,39 +23,33 @@ This project is a monorepo with two pip-installable packages:
 
 | Package | Audience | Install |
 |---------|----------|---------|
+| **pyboj** | Everyone — high-level client with domain wrappers | `pip install pyboj` |
 | **boj-ts-api** | Advanced users who want direct, typed API access | `pip install boj-ts-api` |
-| **pyboj** | Beginners who want convenience helpers (domain wrappers, pandas) | `pip install pyboj` |
 
 `pyboj` depends on `boj-ts-api` and re-exports everything, plus adds:
 
+- `BOJ` client with typed domain methods
+- `Currency`, `TankanIndustry`, `BopAccount` and other filter enums
+- `ExchangeRate`, `InterestRate`, `Tankan` and other domain wrappers
 - `Database` enum for all BOJ database codes
-- `ExchangeRate`, `InterestRate`, `PriceIndex` domain wrappers
 - `csv_to_dataframe()` for pandas conversion
 
 ## Quick Example
 
 ```python
-from pyboj import Client, Lang, Database, ExchangeRate
+from pyboj import BOJ, Currency, Frequency
 
-with Client(lang=Lang.EN) as client:
-    resp = client.get_data_code(
-        db=Database.EXCHANGE_RATES,
-        code="FM08'MAINAVG",
-    )
-    rate = ExchangeRate(resp.RESULTSET[0])
-    print(rate.currency_pair)  # "USD/JPY"
-    print(rate.dates[:3])      # [datetime.date(...), ...]
-    print(rate.values[:3])     # [148.12, 149.56, 151.34]
+boj = BOJ()
 
-    # Or use the low-level API directly
-    resp = client.get_data_code(
-        db="CO",
-        code="TK99F1000601GCQ01000",
-        start_date="202401",
-        end_date="202404",
-    )
-    for series in resp.RESULTSET:
-        print(series.SERIES_CODE, series.VALUES.VALUES)
+# Exchange rates — typed, no magic strings
+rates = boj.exchange_rates(
+    currency=Currency.USD_JPY,
+    frequency=Frequency.D,
+    start_date="202401",
+)
+for r in rates:
+    print(r.currency_pair, r.rate_type, r.values[:3])
+    df = r.to_dataframe()  # pandas DataFrame
 ```
 
 ## Official BOJ Resources

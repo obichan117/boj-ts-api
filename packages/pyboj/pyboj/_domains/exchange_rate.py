@@ -12,6 +12,37 @@ if TYPE_CHECKING:
     from boj_ts_api import SeriesResult
 
 
+class Currency(str, Enum):
+    """ISO currency pair for exchange rate series."""
+
+    USD_JPY = "USD/JPY"
+    EUR_JPY = "EUR/JPY"
+    GBP_JPY = "GBP/JPY"
+    CHF_JPY = "CHF/JPY"
+    SEK_JPY = "SEK/JPY"
+    NOK_JPY = "NOK/JPY"
+    DKK_JPY = "DKK/JPY"
+    CAD_JPY = "CAD/JPY"
+    AUD_JPY = "AUD/JPY"
+    NZD_JPY = "NZD/JPY"
+    ZAR_JPY = "ZAR/JPY"
+    KRW_JPY = "KRW/JPY"
+    CNY_JPY = "CNY/JPY"
+    SGD_JPY = "SGD/JPY"
+    THB_JPY = "THB/JPY"
+    HKD_JPY = "HKD/JPY"
+    TWD_JPY = "TWD/JPY"
+    MYR_JPY = "MYR/JPY"
+    IDR_JPY = "IDR/JPY"
+    PHP_JPY = "PHP/JPY"
+    INR_JPY = "INR/JPY"
+    MXN_JPY = "MXN/JPY"
+    BRL_JPY = "BRL/JPY"
+    RUB_JPY = "RUB/JPY"
+    SAR_JPY = "SAR/JPY"
+    TRY_JPY = "TRY/JPY"
+
+
 class RateType(str, Enum):
     """Type of exchange rate observation."""
 
@@ -31,59 +62,59 @@ class RateType(str, Enum):
     OTHER = "other"
 
 
-# BOJ English name fragments → ISO currency pair
-_CURRENCY_MAP: dict[str, str] = {
-    "U.S.dollar": "USD/JPY",
-    "US.Dollar": "USD/JPY",
-    "Euro": "EUR/JPY",
-    "U.K.pound": "GBP/JPY",
-    "U.K.Pound": "GBP/JPY",
-    "Swiss franc": "CHF/JPY",
-    "Swiss Franc": "CHF/JPY",
-    "Swedish krona": "SEK/JPY",
-    "Swedish Krona": "SEK/JPY",
-    "Norwegian krone": "NOK/JPY",
-    "Norwegian Krone": "NOK/JPY",
-    "Danish krone": "DKK/JPY",
-    "Danish Krone": "DKK/JPY",
-    "Canadian dollar": "CAD/JPY",
-    "Canadian Dollar": "CAD/JPY",
-    "Australian dollar": "AUD/JPY",
-    "Australian Dollar": "AUD/JPY",
-    "NZ dollar": "NZD/JPY",
-    "NZ Dollar": "NZD/JPY",
-    "South African rand": "ZAR/JPY",
-    "South African Rand": "ZAR/JPY",
-    "Korean won": "KRW/JPY",
-    "Korean Won": "KRW/JPY",
-    "Chinese yuan": "CNY/JPY",
-    "Chinese Yuan": "CNY/JPY",
-    "Singapore dollar": "SGD/JPY",
-    "Singapore Dollar": "SGD/JPY",
-    "Thai baht": "THB/JPY",
-    "Thai Baht": "THB/JPY",
-    "Hong Kong dollar": "HKD/JPY",
-    "Hong Kong Dollar": "HKD/JPY",
-    "Taiwan dollar": "TWD/JPY",
-    "Taiwan Dollar": "TWD/JPY",
-    "Malaysian ringgit": "MYR/JPY",
-    "Malaysian Ringgit": "MYR/JPY",
-    "Indonesian rupiah": "IDR/JPY",
-    "Indonesian Rupiah": "IDR/JPY",
-    "Philippine peso": "PHP/JPY",
-    "Philippine Peso": "PHP/JPY",
-    "Indian rupee": "INR/JPY",
-    "Indian Rupee": "INR/JPY",
-    "Mexican peso": "MXN/JPY",
-    "Mexican Peso": "MXN/JPY",
-    "Brazilian real": "BRL/JPY",
-    "Brazilian Real": "BRL/JPY",
-    "Russian ruble": "RUB/JPY",
-    "Russian Ruble": "RUB/JPY",
-    "Saudi riyal": "SAR/JPY",
-    "Saudi Riyal": "SAR/JPY",
-    "Turkish lira": "TRY/JPY",
-    "Turkish Lira": "TRY/JPY",
+# BOJ English name fragments → Currency enum
+_CURRENCY_MAP: dict[str, Currency] = {
+    "U.S.dollar": Currency.USD_JPY,
+    "US.Dollar": Currency.USD_JPY,
+    "Euro": Currency.EUR_JPY,
+    "U.K.pound": Currency.GBP_JPY,
+    "U.K.Pound": Currency.GBP_JPY,
+    "Swiss franc": Currency.CHF_JPY,
+    "Swiss Franc": Currency.CHF_JPY,
+    "Swedish krona": Currency.SEK_JPY,
+    "Swedish Krona": Currency.SEK_JPY,
+    "Norwegian krone": Currency.NOK_JPY,
+    "Norwegian Krone": Currency.NOK_JPY,
+    "Danish krone": Currency.DKK_JPY,
+    "Danish Krone": Currency.DKK_JPY,
+    "Canadian dollar": Currency.CAD_JPY,
+    "Canadian Dollar": Currency.CAD_JPY,
+    "Australian dollar": Currency.AUD_JPY,
+    "Australian Dollar": Currency.AUD_JPY,
+    "NZ dollar": Currency.NZD_JPY,
+    "NZ Dollar": Currency.NZD_JPY,
+    "South African rand": Currency.ZAR_JPY,
+    "South African Rand": Currency.ZAR_JPY,
+    "Korean won": Currency.KRW_JPY,
+    "Korean Won": Currency.KRW_JPY,
+    "Chinese yuan": Currency.CNY_JPY,
+    "Chinese Yuan": Currency.CNY_JPY,
+    "Singapore dollar": Currency.SGD_JPY,
+    "Singapore Dollar": Currency.SGD_JPY,
+    "Thai baht": Currency.THB_JPY,
+    "Thai Baht": Currency.THB_JPY,
+    "Hong Kong dollar": Currency.HKD_JPY,
+    "Hong Kong Dollar": Currency.HKD_JPY,
+    "Taiwan dollar": Currency.TWD_JPY,
+    "Taiwan Dollar": Currency.TWD_JPY,
+    "Malaysian ringgit": Currency.MYR_JPY,
+    "Malaysian Ringgit": Currency.MYR_JPY,
+    "Indonesian rupiah": Currency.IDR_JPY,
+    "Indonesian Rupiah": Currency.IDR_JPY,
+    "Philippine peso": Currency.PHP_JPY,
+    "Philippine Peso": Currency.PHP_JPY,
+    "Indian rupee": Currency.INR_JPY,
+    "Indian Rupee": Currency.INR_JPY,
+    "Mexican peso": Currency.MXN_JPY,
+    "Mexican Peso": Currency.MXN_JPY,
+    "Brazilian real": Currency.BRL_JPY,
+    "Brazilian Real": Currency.BRL_JPY,
+    "Russian ruble": Currency.RUB_JPY,
+    "Russian Ruble": Currency.RUB_JPY,
+    "Saudi riyal": Currency.SAR_JPY,
+    "Saudi Riyal": Currency.SAR_JPY,
+    "Turkish lira": Currency.TRY_JPY,
+    "Turkish Lira": Currency.TRY_JPY,
 }
 
 # Ordered list of (pattern, RateType) — first match wins
@@ -106,6 +137,22 @@ _RATE_TYPE_PATTERNS: list[tuple[str, RateType]] = [
 ]
 
 
+def _detect_currency(name: str) -> Currency | None:
+    """Detect the currency pair from a BOJ series name."""
+    for fragment, currency in _CURRENCY_MAP.items():
+        if fragment in name:
+            return currency
+    return None
+
+
+def _detect_rate_type(name: str) -> RateType:
+    """Detect the rate type from a BOJ series name."""
+    for pattern, rt in _RATE_TYPE_PATTERNS:
+        if re.search(pattern, name):
+            return rt
+    return RateType.OTHER
+
+
 class ExchangeRate(_DomainSeries):
     """Domain wrapper for exchange rate series (FM08 / FM09)."""
 
@@ -113,19 +160,11 @@ class ExchangeRate(_DomainSeries):
         super().__init__(result)
 
     @property
-    def currency_pair(self) -> str | None:
-        """ISO currency pair (e.g. ``"USD/JPY"``) or ``None``."""
-        name = self.name or ""
-        for fragment, pair in _CURRENCY_MAP.items():
-            if fragment in name:
-                return pair
-        return None
+    def currency_pair(self) -> Currency | None:
+        """ISO currency pair (e.g. ``Currency.USD_JPY``) or ``None``."""
+        return _detect_currency(self.name or "")
 
     @property
     def rate_type(self) -> RateType:
         """Classified rate type based on the English series name."""
-        name = self.name or ""
-        for pattern, rt in _RATE_TYPE_PATTERNS:
-            if re.search(pattern, name):
-                return rt
-        return RateType.OTHER
+        return _detect_rate_type(self.name or "")

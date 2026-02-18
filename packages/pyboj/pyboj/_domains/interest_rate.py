@@ -56,6 +56,24 @@ _TENOR_RE = re.compile(
 )
 
 
+def _detect_rate_category(name: str) -> RateCategory:
+    """Detect the rate category from a BOJ series name."""
+    for pattern, cat in _CATEGORY_PATTERNS:
+        if re.search(pattern, name):
+            return cat
+    return RateCategory.OTHER
+
+
+def _detect_collateralization(name: str) -> Collateralization | None:
+    """Detect collateralization type from a BOJ series name."""
+    lower = name.lower()
+    if "uncollateralized" in lower:
+        return Collateralization.UNCOLLATERALIZED
+    if "collateralized" in lower:
+        return Collateralization.COLLATERALIZED
+    return None
+
+
 class InterestRate(_DomainSeries):
     """Domain wrapper for interest rate series (FM01, FM02, IR01-IR04)."""
 
@@ -65,21 +83,12 @@ class InterestRate(_DomainSeries):
     @property
     def rate_category(self) -> RateCategory:
         """Classified rate category based on the English series name."""
-        name = self.name or ""
-        for pattern, cat in _CATEGORY_PATTERNS:
-            if re.search(pattern, name):
-                return cat
-        return RateCategory.OTHER
+        return _detect_rate_category(self.name or "")
 
     @property
     def collateralization(self) -> Collateralization | None:
         """Collateralization type, or ``None`` if not applicable."""
-        name = (self.name or "").lower()
-        if "uncollateralized" in name:
-            return Collateralization.UNCOLLATERALIZED
-        if "collateralized" in name:
-            return Collateralization.COLLATERALIZED
-        return None
+        return _detect_collateralization(self.name or "")
 
     @property
     def tenor(self) -> str | None:

@@ -1,6 +1,111 @@
 # API Reference
 
-## Clients
+## High-Level Client
+
+### BOJ
+
+::: pyboj._boj.BOJ
+    options:
+      members:
+        - __init__
+        - close
+        - metadata
+        - exchange_rates
+        - interest_rates
+        - price_indices
+        - tankan
+        - balance_of_payments
+        - money_deposits
+        - loans
+        - financial_markets
+        - balance_sheets
+        - flow_of_funds
+        - boj_operations
+        - public_finance
+        - international
+
+### Database Enum
+
+::: pyboj._config.Database
+
+---
+
+## Domain Wrappers
+
+### Base
+
+::: pyboj._domains._base.Series
+    options:
+      members:
+        - series_code
+        - name
+        - name_jp
+        - unit
+        - frequency
+        - category
+        - dates
+        - values
+        - to_dataframe
+
+### ExchangeRate
+
+::: pyboj._domains.exchange_rate.ExchangeRate
+
+::: pyboj._domains.exchange_rate.Currency
+
+::: pyboj._domains.exchange_rate.RateType
+
+### InterestRate
+
+::: pyboj._domains.interest_rate.InterestRate
+
+::: pyboj._domains.interest_rate.RateCategory
+
+::: pyboj._domains.interest_rate.Collateralization
+
+### PriceIndex
+
+::: pyboj._domains.price_index.PriceIndex
+
+::: pyboj._domains.price_index.IndexType
+
+### Tankan
+
+::: pyboj._domains.tankan.Tankan
+
+::: pyboj._domains.tankan.TankanIndustry
+
+::: pyboj._domains.tankan.TankanSize
+
+::: pyboj._domains.tankan.TankanItem
+
+::: pyboj._domains.tankan.TankanSeriesType
+
+::: pyboj._domains.tankan.TankanTiming
+
+### BalanceOfPayments
+
+::: pyboj._domains.balance_of_payments.BalanceOfPayments
+
+::: pyboj._domains.balance_of_payments.BopAccount
+
+### MoneyDeposit
+
+::: pyboj._domains.money_deposit.MoneyDeposit
+
+::: pyboj._domains.money_deposit.MonetaryComponent
+
+::: pyboj._domains.money_deposit.Adjustment
+
+### Loan
+
+::: pyboj._domains.loan.Loan
+
+::: pyboj._domains.loan.IndustrySector
+
+---
+
+## Low-Level Clients
 
 ### Synchronous
 
@@ -65,50 +170,3 @@
 ## Utilities
 
 ::: pyboj._helpers.csv.csv_to_dataframe
-
----
-
-## pyboj High-Level API
-
-### Database Enum
-
-::: pyboj._config.Database
-
-### Domain Wrappers
-
-Domain wrappers wrap raw `SeriesResult` objects and add parsed dates, typed values, and domain-specific properties.
-
-#### Base
-
-::: pyboj._domains._base._DomainSeries
-    options:
-      members:
-        - series_code
-        - name
-        - name_jp
-        - unit
-        - frequency
-        - category
-        - dates
-        - values
-        - to_dataframe
-
-#### ExchangeRate
-
-::: pyboj._domains.exchange_rate.ExchangeRate
-
-::: pyboj._domains.exchange_rate.RateType
-
-#### InterestRate
-
-::: pyboj._domains.interest_rate.InterestRate
-
-::: pyboj._domains.interest_rate.RateCategory
-
-::: pyboj._domains.interest_rate.Collateralization
-
-#### PriceIndex
-
-::: pyboj._domains.price_index.PriceIndex
-
-::: pyboj._domains.price_index.IndexType

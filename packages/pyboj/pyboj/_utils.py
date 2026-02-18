@@ -7,6 +7,9 @@ from boj_ts_api import Frequency
 # Map Frequency enum values to prefix(es) expected in BOJ response FREQUENCY field.
 # BOJ returns: DAILY, WEEKLY(MON), MONTHLY, QUARTERLY,
 #              SEMIANNUAL(CY), SEMIANNUAL(FY), ANNUAL(CY), ANNUAL(FY)
+# TODO: verify annual/semi-annual values against live API. The official manual
+#       documents ANNUAL / ANNUAL(MAR) and SEMIANNUAL / SEMIANNUAL(SEP), which
+#       differs from the ANNUAL(CY) / ANNUAL(FY) values used below.
 _FREQUENCY_PREFIX: dict[str, str] = {
     "D": "DAILY",
     "W": "WEEKLY",

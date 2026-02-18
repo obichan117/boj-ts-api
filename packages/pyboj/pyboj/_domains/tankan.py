@@ -6,10 +6,10 @@ import re
 from enum import Enum
 from typing import TYPE_CHECKING
 
-from pyboj._domains._base import _DomainSeries
+from pyboj._domains._base import Series
 
 if TYPE_CHECKING:
-    from boj_ts_api import MetadataRecord, SeriesResult
+    from boj_ts_api import MetadataRecord
 
 
 class TankanIndustry(str, Enum):
@@ -201,11 +201,8 @@ def _matches_tankan_filters(
     return timing is None or _detect_tankan_timing(name) == timing
 
 
-class Tankan(_DomainSeries):
+class Tankan(Series):
     """Domain wrapper for TANKAN survey series (CO database)."""
-
-    def __init__(self, result: SeriesResult) -> None:
-        super().__init__(result)
 
     @property
     def industry(self) -> TankanIndustry:

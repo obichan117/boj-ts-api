@@ -4,12 +4,8 @@ from __future__ import annotations
 
 import re
 from enum import Enum
-from typing import TYPE_CHECKING
 
-from pyboj._domains._base import _DomainSeries
-
-if TYPE_CHECKING:
-    from boj_ts_api import SeriesResult
+from pyboj._domains._base import Series
 
 
 class Currency(str, Enum):
@@ -62,59 +58,35 @@ class RateType(str, Enum):
     OTHER = "other"
 
 
-# BOJ English name fragments → Currency enum
+# BOJ English name fragments → Currency enum (case-insensitive lookup)
 _CURRENCY_MAP: dict[str, Currency] = {
-    "U.S.dollar": Currency.USD_JPY,
-    "US.Dollar": Currency.USD_JPY,
-    "Euro": Currency.EUR_JPY,
-    "U.K.pound": Currency.GBP_JPY,
-    "U.K.Pound": Currency.GBP_JPY,
-    "Swiss franc": Currency.CHF_JPY,
-    "Swiss Franc": Currency.CHF_JPY,
-    "Swedish krona": Currency.SEK_JPY,
-    "Swedish Krona": Currency.SEK_JPY,
-    "Norwegian krone": Currency.NOK_JPY,
-    "Norwegian Krone": Currency.NOK_JPY,
-    "Danish krone": Currency.DKK_JPY,
-    "Danish Krone": Currency.DKK_JPY,
-    "Canadian dollar": Currency.CAD_JPY,
-    "Canadian Dollar": Currency.CAD_JPY,
-    "Australian dollar": Currency.AUD_JPY,
-    "Australian Dollar": Currency.AUD_JPY,
-    "NZ dollar": Currency.NZD_JPY,
-    "NZ Dollar": Currency.NZD_JPY,
-    "South African rand": Currency.ZAR_JPY,
-    "South African Rand": Currency.ZAR_JPY,
-    "Korean won": Currency.KRW_JPY,
-    "Korean Won": Currency.KRW_JPY,
-    "Chinese yuan": Currency.CNY_JPY,
-    "Chinese Yuan": Currency.CNY_JPY,
-    "Singapore dollar": Currency.SGD_JPY,
-    "Singapore Dollar": Currency.SGD_JPY,
-    "Thai baht": Currency.THB_JPY,
-    "Thai Baht": Currency.THB_JPY,
-    "Hong Kong dollar": Currency.HKD_JPY,
-    "Hong Kong Dollar": Currency.HKD_JPY,
-    "Taiwan dollar": Currency.TWD_JPY,
-    "Taiwan Dollar": Currency.TWD_JPY,
-    "Malaysian ringgit": Currency.MYR_JPY,
-    "Malaysian Ringgit": Currency.MYR_JPY,
-    "Indonesian rupiah": Currency.IDR_JPY,
-    "Indonesian Rupiah": Currency.IDR_JPY,
-    "Philippine peso": Currency.PHP_JPY,
-    "Philippine Peso": Currency.PHP_JPY,
-    "Indian rupee": Currency.INR_JPY,
-    "Indian Rupee": Currency.INR_JPY,
-    "Mexican peso": Currency.MXN_JPY,
-    "Mexican Peso": Currency.MXN_JPY,
-    "Brazilian real": Currency.BRL_JPY,
-    "Brazilian Real": Currency.BRL_JPY,
-    "Russian ruble": Currency.RUB_JPY,
-    "Russian Ruble": Currency.RUB_JPY,
-    "Saudi riyal": Currency.SAR_JPY,
-    "Saudi Riyal": Currency.SAR_JPY,
-    "Turkish lira": Currency.TRY_JPY,
-    "Turkish Lira": Currency.TRY_JPY,
+    "u.s.dollar": Currency.USD_JPY,
+    "us.dollar": Currency.USD_JPY,
+    "euro": Currency.EUR_JPY,
+    "u.k.pound": Currency.GBP_JPY,
+    "swiss franc": Currency.CHF_JPY,
+    "swedish krona": Currency.SEK_JPY,
+    "norwegian krone": Currency.NOK_JPY,
+    "danish krone": Currency.DKK_JPY,
+    "canadian dollar": Currency.CAD_JPY,
+    "australian dollar": Currency.AUD_JPY,
+    "nz dollar": Currency.NZD_JPY,
+    "south african rand": Currency.ZAR_JPY,
+    "korean won": Currency.KRW_JPY,
+    "chinese yuan": Currency.CNY_JPY,
+    "singapore dollar": Currency.SGD_JPY,
+    "thai baht": Currency.THB_JPY,
+    "hong kong dollar": Currency.HKD_JPY,
+    "taiwan dollar": Currency.TWD_JPY,
+    "malaysian ringgit": Currency.MYR_JPY,
+    "indonesian rupiah": Currency.IDR_JPY,
+    "philippine peso": Currency.PHP_JPY,
+    "indian rupee": Currency.INR_JPY,
+    "mexican peso": Currency.MXN_JPY,
+    "brazilian real": Currency.BRL_JPY,
+    "russian ruble": Currency.RUB_JPY,
+    "saudi riyal": Currency.SAR_JPY,
+    "turkish lira": Currency.TRY_JPY,
 }
 
 # Ordered list of (pattern, RateType) — first match wins
@@ -139,8 +111,9 @@ _RATE_TYPE_PATTERNS: list[tuple[str, RateType]] = [
 
 def _detect_currency(name: str) -> Currency | None:
     """Detect the currency pair from a BOJ series name."""
+    lower = name.lower()
     for fragment, currency in _CURRENCY_MAP.items():
-        if fragment in name:
+        if fragment in lower:
             return currency
     return None
 
@@ -153,11 +126,8 @@ def _detect_rate_type(name: str) -> RateType:
     return RateType.OTHER
 
 
-class ExchangeRate(_DomainSeries):
+class ExchangeRate(Series):
     """Domain wrapper for exchange rate series (FM08 / FM09)."""
-
-    def __init__(self, result: SeriesResult) -> None:
-        super().__init__(result)
 
     @property
     def currency_pair(self) -> Currency | None:

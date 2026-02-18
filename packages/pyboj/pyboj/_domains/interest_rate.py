@@ -4,12 +4,8 @@ from __future__ import annotations
 
 import re
 from enum import Enum
-from typing import TYPE_CHECKING
 
-from pyboj._domains._base import _DomainSeries
-
-if TYPE_CHECKING:
-    from boj_ts_api import SeriesResult
+from pyboj._domains._base import Series
 
 
 class RateCategory(str, Enum):
@@ -74,11 +70,8 @@ def _detect_collateralization(name: str) -> Collateralization | None:
     return None
 
 
-class InterestRate(_DomainSeries):
+class InterestRate(Series):
     """Domain wrapper for interest rate series (FM01, FM02, IR01-IR04)."""
-
-    def __init__(self, result: SeriesResult) -> None:
-        super().__init__(result)
 
     @property
     def rate_category(self) -> RateCategory:

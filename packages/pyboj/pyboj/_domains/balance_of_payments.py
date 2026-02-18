@@ -4,12 +4,8 @@ from __future__ import annotations
 
 import re
 from enum import Enum
-from typing import TYPE_CHECKING
 
-from pyboj._domains._base import _DomainSeries
-
-if TYPE_CHECKING:
-    from boj_ts_api import SeriesResult
+from pyboj._domains._base import Series
 
 
 class BopAccount(str, Enum):
@@ -52,11 +48,8 @@ def _detect_bop_account(name: str) -> BopAccount:
     return BopAccount.OTHER
 
 
-class BalanceOfPayments(_DomainSeries):
+class BalanceOfPayments(Series):
     """Domain wrapper for balance of payments series (BP01)."""
-
-    def __init__(self, result: SeriesResult) -> None:
-        super().__init__(result)
 
     @property
     def account(self) -> BopAccount:

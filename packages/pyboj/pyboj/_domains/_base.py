@@ -106,7 +106,3 @@ class Series:
         cls = type(self).__name__
         n = len(self._result.VALUES.SURVEY_DATES)
         return f"{cls}(series_code={self.series_code!r}, name={self.name!r}, observations={n})"
-
-
-# Backward-compatible alias for internal imports
-_DomainSeries = Series

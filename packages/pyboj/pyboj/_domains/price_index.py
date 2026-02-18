@@ -4,12 +4,8 @@ from __future__ import annotations
 
 import re
 from enum import Enum
-from typing import TYPE_CHECKING
 
-from pyboj._domains._base import _DomainSeries
-
-if TYPE_CHECKING:
-    from boj_ts_api import SeriesResult
+from pyboj._domains._base import Series
 
 
 class IndexType(str, Enum):
@@ -49,11 +45,8 @@ def _detect_index_type(name: str, category: str) -> IndexType:
     return IndexType.OTHER
 
 
-class PriceIndex(_DomainSeries):
+class PriceIndex(Series):
     """Domain wrapper for price index series (PR01-PR04)."""
-
-    def __init__(self, result: SeriesResult) -> None:
-        super().__init__(result)
 
     @property
     def index_type(self) -> IndexType:

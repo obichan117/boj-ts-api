@@ -13,9 +13,9 @@ from boj_ts_api._types.config import (
     ENDPOINT_METADATA,
     Format,
 )
-from boj_ts_api._types.exceptions import BOJValidationError
 from boj_ts_api._types.models.response import DataResponse, MetadataResponse
 from boj_ts_api._types.models.series import SeriesResult
+from boj_ts_api._utils import _set_optional, _validate_required
 
 
 class Client:
@@ -202,15 +202,3 @@ class Client:
 
     def _base_params(self, format_: Format) -> dict[str, str]:
         return {"format": format_.value, "lang": self._lang}
-
-
-def _validate_required(**kwargs: str | None) -> None:
-    for name, value in kwargs.items():
-        if not value:
-            raise BOJValidationError(f"Parameter '{name}' is required and cannot be empty.")
-
-
-def _set_optional(params: dict[str, Any], **kwargs: Any) -> None:
-    for key, value in kwargs.items():
-        if value is not None:
-            params[key] = value

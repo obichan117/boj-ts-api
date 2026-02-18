@@ -15,7 +15,7 @@ from boj_ts_api._types.config import (
 )
 from boj_ts_api._types.models.response import DataResponse, MetadataResponse
 from boj_ts_api._types.models.series import SeriesResult
-from boj_ts_api.client import _set_optional, _validate_required
+from boj_ts_api._utils import _set_optional, _validate_required
 
 
 class AsyncClient:

@@ -19,14 +19,16 @@ packages/
 ├── boj-ts-api/                  # LOW-LEVEL: generic API client (pip install boj-ts-api)
 │   ├── boj_ts_api/
 │   │   ├── __init__.py          #   exports Client, AsyncClient, models, enums, exceptions
+│   │   ├── _base_client.py      #   shared param-building logic for sync/async clients
 │   │   ├── _types/              #   data contracts
-│   │   │   ├── config.py        #     BASE_URL, endpoints, enums, limits
+│   │   │   ├── config.py        #     BASE_URL, endpoints, enums (Lang, Frequency, Format), limits
 │   │   │   ├── exceptions.py    #     BOJError hierarchy
-│   │   │   └── models/          #     Pydantic response schemas
-│   │   ├── _transport.py        #   httpx wrappers
+│   │   │   └── models/          #     Pydantic response schemas (ResponseEnvelope base)
+│   │   ├── _transport.py        #   httpx wrappers (SyncTransport, AsyncTransport)
 │   │   ├── _parse.py            #   JSON → Pydantic
-│   │   ├── client.py            #   Client (sync)
-│   │   └── async_client.py      #   AsyncClient
+│   │   ├── _utils.py            #   shared parameter validation
+│   │   ├── client.py            #   Client (sync), inherits _BaseClient
+│   │   └── async_client.py      #   AsyncClient, inherits _BaseClient
 │   └── tests/
 │
 └── pyboj/                       # HIGH-LEVEL: friendly wrapper (pip install pyboj)
@@ -42,7 +44,8 @@ packages/
 **Core principle: Fetch vs Parse separation.**
 - `_transport.py` does I/O (returns raw httpx.Response)
 - `_parse.py` transforms data (returns Pydantic models)
-- Client modules compose both
+- `_base_client.py` builds params and validates
+- Client modules compose all three (thin wrappers)
 
 ## Key Files
 

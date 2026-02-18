@@ -1,4 +1,4 @@
-# boj-ts-api
+# pyboj
 
 Python client for the [Bank of Japan Time-Series Statistics API](https://www.stat-search.boj.or.jp/).
 
@@ -26,9 +26,9 @@ This project is a monorepo with two pip-installable packages:
 ## Quick Example
 
 ```python
-from boj_ts_api import Client
+from boj_ts_api import Client, Lang
 
-with Client(lang="en") as client:
+with Client(lang=Lang.EN) as client:
     resp = client.get_data_code(
         db="CO",
         code="TK99F1000601GCQ01000",
@@ -44,4 +44,4 @@ with Client(lang="en") as client:
 - [BOJ API Announcement (2026-02-18)](https://www.boj.or.jp/statistics/outline/notice_2026/not260218a.htm)
 - [BOJ Time-Series Search Site](https://www.stat-search.boj.or.jp/)
 - [Upstream API Reference](boj-api.md) — full endpoint/parameter documentation
-- [OpenAPI Specification](https://github.com/obichan117/boj-ts-api/blob/main/openapi.yaml)
+- [OpenAPI Specification](https://github.com/obichan117/pyboj/blob/main/openapi.yaml)

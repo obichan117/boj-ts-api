@@ -4,7 +4,7 @@ from __future__ import annotations
 
 import httpx
 import respx
-from boj_ts_api import Client
+from boj_ts_api import Client, Frequency, Lang
 from boj_ts_api._types.config import (
     BASE_URL,
     ENDPOINT_DATA_CODE,
@@ -19,7 +19,7 @@ class TestGetDataCode:
         route = respx.get(f"{BASE_URL}{ENDPOINT_DATA_CODE}").mock(
             return_value=httpx.Response(200, json=data_code_json)
         )
-        with Client(lang="en") as client:
+        with Client(lang=Lang.EN) as client:
             resp = client.get_data_code(db="CO", code="TK99F1000601GCQ01000")
 
         assert route.called
@@ -32,7 +32,7 @@ class TestGetDataCode:
         route = respx.get(f"{BASE_URL}{ENDPOINT_DATA_CODE}").mock(
             return_value=httpx.Response(200, json=data_code_json)
         )
-        with Client(lang="en") as client:
+        with Client(lang=Lang.EN) as client:
             resp = client.get_data_code(
                 db="CO",
                 code="TK99F1000601GCQ01000",
@@ -51,7 +51,7 @@ class TestGetDataCode:
         respx.get(f"{BASE_URL}{ENDPOINT_DATA_CODE}").mock(
             return_value=httpx.Response(200, text=csv_text)
         )
-        with Client(lang="en") as client:
+        with Client(lang=Lang.EN) as client:
             result = client.get_data_code_csv(db="CO", code="TK99F1000601GCQ01000")
 
         assert "SERIES_CODE" in result
@@ -64,8 +64,8 @@ class TestGetDataLayer:
         respx.get(f"{BASE_URL}{ENDPOINT_DATA_LAYER}").mock(
             return_value=httpx.Response(200, json=data_layer_json)
         )
-        with Client(lang="en") as client:
-            resp = client.get_data_layer(db="FM08", frequency="D", layer="1,1")
+        with Client(lang=Lang.EN) as client:
+            resp = client.get_data_layer(db="FM08", frequency=Frequency.D, layer="1,1")
 
         assert resp.STATUS == 200
         assert resp.RESULTSET[0].SERIES_CODE == "FM08'MAINAVG"
@@ -77,7 +77,7 @@ class TestGetMetadata:
         respx.get(f"{BASE_URL}{ENDPOINT_METADATA}").mock(
             return_value=httpx.Response(200, json=metadata_json)
         )
-        with Client(lang="en") as client:
+        with Client(lang=Lang.EN) as client:
             resp = client.get_metadata(db="FM08")
 
         assert resp.STATUS == 200
@@ -89,7 +89,7 @@ class TestGetMetadata:
         respx.get(f"{BASE_URL}{ENDPOINT_METADATA}").mock(
             return_value=httpx.Response(200, text=csv)
         )
-        with Client(lang="en") as client:
+        with Client(lang=Lang.EN) as client:
             result = client.get_metadata_csv(db="FM08")
 
         assert "FM08'MAINAVG" in result

@@ -13,6 +13,7 @@ from boj_ts_api import (
     Lang,
     MetadataRecord,
     MetadataResponse,
+    ResponseEnvelope,
     SeriesResult,
     SeriesValues,
 )
@@ -32,6 +33,7 @@ __all__ = [
     "Lang",
     "MetadataRecord",
     "MetadataResponse",
+    "ResponseEnvelope",
     "SeriesResult",
     "SeriesValues",
     "csv_to_dataframe",

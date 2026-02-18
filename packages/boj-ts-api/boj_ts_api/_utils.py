@@ -9,7 +9,7 @@ from boj_ts_api._types.exceptions import BOJValidationError
 
 def _validate_required(**kwargs: str | None) -> None:
     for name, value in kwargs.items():
-        if not value:
+        if value is None or value == "":
             raise BOJValidationError(f"Parameter '{name}' is required and cannot be empty.")
 
 

@@ -5,7 +5,7 @@ from __future__ import annotations
 import httpx
 import pytest
 import respx
-from boj_ts_api import AsyncClient
+from boj_ts_api import AsyncClient, Frequency, Lang
 from boj_ts_api._types.config import (
     BASE_URL,
     ENDPOINT_DATA_CODE,
@@ -21,7 +21,7 @@ class TestAsyncGetDataCode:
         respx.get(f"{BASE_URL}{ENDPOINT_DATA_CODE}").mock(
             return_value=httpx.Response(200, json=data_code_json)
         )
-        async with AsyncClient(lang="en") as client:
+        async with AsyncClient(lang=Lang.EN) as client:
             resp = await client.get_data_code(db="CO", code="TK99F1000601GCQ01000")
 
         assert resp.STATUS == 200
@@ -33,7 +33,7 @@ class TestAsyncGetDataCode:
         respx.get(f"{BASE_URL}{ENDPOINT_DATA_CODE}").mock(
             return_value=httpx.Response(200, text=csv_text)
         )
-        async with AsyncClient(lang="en") as client:
+        async with AsyncClient(lang=Lang.EN) as client:
             result = await client.get_data_code_csv(db="CO", code="TK99F1000601GCQ01000")
 
         assert "SERIES_CODE" in result
@@ -50,7 +50,7 @@ class TestAsyncIterDataCode:
             ]
         )
         results = []
-        async with AsyncClient(lang="en") as client:
+        async with AsyncClient(lang=Lang.EN) as client:
             async for item in client.iter_data_code(db="CO", code="TK99F1000601GCQ01000"):
                 results.append(item)
 
@@ -66,8 +66,8 @@ class TestAsyncGetDataLayer:
         respx.get(f"{BASE_URL}{ENDPOINT_DATA_LAYER}").mock(
             return_value=httpx.Response(200, json=data_layer_json)
         )
-        async with AsyncClient(lang="en") as client:
-            resp = await client.get_data_layer(db="FM08", frequency="D", layer="1,1")
+        async with AsyncClient(lang=Lang.EN) as client:
+            resp = await client.get_data_layer(db="FM08", frequency=Frequency.D, layer="1,1")
 
         assert resp.STATUS == 200
         assert resp.RESULTSET[0].SERIES_CODE == "FM08'MAINAVG"
@@ -80,7 +80,7 @@ class TestAsyncGetMetadata:
         respx.get(f"{BASE_URL}{ENDPOINT_METADATA}").mock(
             return_value=httpx.Response(200, json=metadata_json)
         )
-        async with AsyncClient(lang="en") as client:
+        async with AsyncClient(lang=Lang.EN) as client:
             resp = await client.get_metadata(db="FM08")
 
         assert resp.STATUS == 200

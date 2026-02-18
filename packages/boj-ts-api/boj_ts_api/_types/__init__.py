@@ -23,6 +23,7 @@ from boj_ts_api._types.models import (
     DataResponse,
     MetadataRecord,
     MetadataResponse,
+    ResponseEnvelope,
     SeriesResult,
     SeriesValues,
 )
@@ -46,6 +47,7 @@ __all__ = [
     "MAX_SERIES_PER_REQUEST",
     "MetadataRecord",
     "MetadataResponse",
+    "ResponseEnvelope",
     "SeriesResult",
     "SeriesValues",
 ]

@@ -1,8 +1,8 @@
-site_name: boj-ts-api
+site_name: pyboj
 site_description: Python client for the Bank of Japan Time-Series Statistics API
-site_url: https://obichan117.github.io/boj-ts-api/
-repo_url: https://github.com/obichan117/boj-ts-api
-repo_name: obichan117/boj-ts-api
+site_url: https://obichan117.github.io/pyboj/
+repo_url: https://github.com/obichan117/pyboj
+repo_name: obichan117/pyboj
 
 theme:
   name: material

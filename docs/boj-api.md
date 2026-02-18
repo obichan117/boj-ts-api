@@ -5,7 +5,7 @@ This page documents the **Bank of Japan Time-Series Statistics API** — the ups
 !!! info "Official Sources"
     - [API Announcement (2026-02-18)](https://www.boj.or.jp/statistics/outline/notice_2026/not260218a.htm) — original BOJ notice
     - [BOJ Time-Series Search Site](https://www.stat-search.boj.or.jp/) — interactive search UI
-    - [OpenAPI Specification](https://github.com/obichan117/boj-ts-api/blob/main/openapi.yaml) — machine-readable spec
+    - [OpenAPI Specification](https://github.com/obichan117/pyboj/blob/main/openapi.yaml) — machine-readable spec
 
 ## Base URL
 

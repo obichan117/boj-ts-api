@@ -5,35 +5,30 @@ from __future__ import annotations
 from collections.abc import Iterator
 from typing import Any
 
+from boj_ts_api._base_client import _BaseClient
 from boj_ts_api._parse import parse_data_response, parse_metadata_response
 from boj_ts_api._transport import SyncTransport
-from boj_ts_api._types.config import (
-    ENDPOINT_DATA_CODE,
-    ENDPOINT_DATA_LAYER,
-    ENDPOINT_METADATA,
-    Format,
-)
+from boj_ts_api._types.config import Format, Frequency, Lang
 from boj_ts_api._types.models.response import DataResponse, MetadataResponse
 from boj_ts_api._types.models.series import SeriesResult
-from boj_ts_api._utils import _set_optional, _validate_required
 
 
-class Client:
+class Client(_BaseClient):
     """Synchronous client for the Bank of Japan Time-Series API.
 
     Usage::
 
-        with Client(lang="en") as client:
+        with Client(lang=Lang.EN) as client:
             resp = client.get_data_code(db="CO", code="TK99F1000601GCQ01000")
     """
 
     def __init__(
         self,
-        lang: str = "en",
+        lang: Lang = Lang.EN,
         timeout: float = 30.0,
         base_url: str | None = None,
     ) -> None:
-        self._lang = lang
+        super().__init__(lang=lang, timeout=timeout)
         kwargs: dict[str, Any] = {"timeout": timeout}
         if base_url is not None:
             kwargs["base_url"] = base_url
@@ -62,12 +57,11 @@ class Client:
         start_position: int | None = None,
     ) -> DataResponse:
         """Fetch time-series data by series code(s). Returns a single page."""
-        _validate_required(db=db, code=code)
-        params = self._base_params(format_=Format.JSON)
-        params.update({"db": db, "code": code})
-        _set_optional(params, startDate=start_date, endDate=end_date, startPosition=start_position)
-        resp = self._transport.get(ENDPOINT_DATA_CODE, params)
-        return parse_data_response(resp)
+        path, params = self._data_code_params(
+            db, code, start_date=start_date, end_date=end_date,
+            start_position=start_position, format_=Format.JSON,
+        )
+        return parse_data_response(self._transport.get(path, params))
 
     def iter_data_code(
         self,
@@ -78,15 +72,11 @@ class Client:
         end_date: str | None = None,
     ) -> Iterator[SeriesResult]:
         """Iterate over all series results, auto-paginating via NEXTPOSITION."""
-        _validate_required(db=db, code=code)
         start_position: int | None = None
         while True:
             resp = self.get_data_code(
-                db=db,
-                code=code,
-                start_date=start_date,
-                end_date=end_date,
-                start_position=start_position,
+                db=db, code=code, start_date=start_date,
+                end_date=end_date, start_position=start_position,
             )
             yield from resp.RESULTSET
             if resp.NEXTPOSITION is None:
@@ -103,19 +93,18 @@ class Client:
         start_position: int | None = None,
     ) -> str:
         """Fetch time-series data as raw CSV text."""
-        _validate_required(db=db, code=code)
-        params = self._base_params(format_=Format.CSV)
-        params.update({"db": db, "code": code})
-        _set_optional(params, startDate=start_date, endDate=end_date, startPosition=start_position)
-        resp = self._transport.get(ENDPOINT_DATA_CODE, params)
-        return resp.text
+        path, params = self._data_code_params(
+            db, code, start_date=start_date, end_date=end_date,
+            start_position=start_position, format_=Format.CSV,
+        )
+        return self._transport.get(path, params).text
 
     # -- Data by Layer --
 
     def get_data_layer(
         self,
         db: str,
-        frequency: str,
+        frequency: Frequency,
         layer: str,
         *,
         start_date: str | None = None,
@@ -123,32 +112,27 @@ class Client:
         start_position: int | None = None,
     ) -> DataResponse:
         """Fetch time-series data by hierarchy layer. Returns a single page."""
-        _validate_required(db=db, frequency=frequency, layer=layer)
-        params = self._base_params(format_=Format.JSON)
-        params.update({"db": db, "frequency": frequency, "layer": layer})
-        _set_optional(params, startDate=start_date, endDate=end_date, startPosition=start_position)
-        resp = self._transport.get(ENDPOINT_DATA_LAYER, params)
-        return parse_data_response(resp)
+        path, params = self._data_layer_params(
+            db, frequency, layer, start_date=start_date, end_date=end_date,
+            start_position=start_position, format_=Format.JSON,
+        )
+        return parse_data_response(self._transport.get(path, params))
 
     def iter_data_layer(
         self,
         db: str,
-        frequency: str,
+        frequency: Frequency,
         layer: str,
         *,
         start_date: str | None = None,
         end_date: str | None = None,
     ) -> Iterator[SeriesResult]:
         """Iterate over all series results from Layer API, auto-paginating."""
-        _validate_required(db=db, frequency=frequency, layer=layer)
         start_position: int | None = None
         while True:
             resp = self.get_data_layer(
-                db=db,
-                frequency=frequency,
-                layer=layer,
-                start_date=start_date,
-                end_date=end_date,
+                db=db, frequency=frequency, layer=layer,
+                start_date=start_date, end_date=end_date,
                 start_position=start_position,
             )
             yield from resp.RESULTSET
@@ -159,7 +143,7 @@ class Client:
     def get_data_layer_csv(
         self,
         db: str,
-        frequency: str,
+        frequency: Frequency,
         layer: str,
         *,
         start_date: str | None = None,
@@ -167,38 +151,20 @@ class Client:
         start_position: int | None = None,
     ) -> str:
         """Fetch layer data as raw CSV text."""
-        _validate_required(db=db, frequency=frequency, layer=layer)
-        params = self._base_params(format_=Format.CSV)
-        params.update({"db": db, "frequency": frequency, "layer": layer})
-        _set_optional(params, startDate=start_date, endDate=end_date, startPosition=start_position)
-        resp = self._transport.get(ENDPOINT_DATA_LAYER, params)
-        return resp.text
+        path, params = self._data_layer_params(
+            db, frequency, layer, start_date=start_date, end_date=end_date,
+            start_position=start_position, format_=Format.CSV,
+        )
+        return self._transport.get(path, params).text
 
     # -- Metadata --
 
-    def get_metadata(
-        self,
-        db: str,
-    ) -> MetadataResponse:
+    def get_metadata(self, db: str) -> MetadataResponse:
         """Fetch metadata for a database."""
-        _validate_required(db=db)
-        params = self._base_params(format_=Format.JSON)
-        params["db"] = db
-        resp = self._transport.get(ENDPOINT_METADATA, params)
-        return parse_metadata_response(resp)
+        path, params = self._metadata_params(db, format_=Format.JSON)
+        return parse_metadata_response(self._transport.get(path, params))
 
-    def get_metadata_csv(
-        self,
-        db: str,
-    ) -> str:
+    def get_metadata_csv(self, db: str) -> str:
         """Fetch metadata as raw CSV text."""
-        _validate_required(db=db)
-        params = self._base_params(format_=Format.CSV)
-        params["db"] = db
-        resp = self._transport.get(ENDPOINT_METADATA, params)
-        return resp.text
-
-    # -- Helpers --
-
-    def _base_params(self, format_: Format) -> dict[str, str]:
-        return {"format": format_.value, "lang": self._lang}
+        path, params = self._metadata_params(db, format_=Format.CSV)
+        return self._transport.get(path, params).text

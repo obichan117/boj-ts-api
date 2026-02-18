@@ -26,9 +26,9 @@ Wraps the official BOJ API ([announced 2026-02-18](https://www.boj.or.jp/statist
 ## Quick Start
 
 ```python
-from boj_ts_api import Client
+from boj_ts_api import Client, Lang
 
-with Client(lang="en") as client:
+with Client(lang=Lang.EN) as client:
     # Fetch CPI data for Tokyo
     resp = client.get_data_code(
         db="CO",
@@ -53,10 +53,10 @@ with Client(lang="en") as client:
 
 ```python
 import asyncio
-from boj_ts_api import AsyncClient
+from boj_ts_api import AsyncClient, Lang
 
 async def main():
-    async with AsyncClient(lang="en") as client:
+    async with AsyncClient(lang=Lang.EN) as client:
         resp = await client.get_data_code(db="CO", code="TK99F1000601GCQ01000")
         print(resp.RESULTSET[0].VALUES.VALUES)
 
@@ -66,9 +66,9 @@ asyncio.run(main())
 ### CSV + pandas
 
 ```python
-from pyboj import Client, csv_to_dataframe
+from pyboj import Client, Lang, csv_to_dataframe
 
-with Client(lang="en") as client:
+with Client(lang=Lang.EN) as client:
     csv_text = client.get_data_code_csv(db="CO", code="TK99F1000601GCQ01000")
     df = csv_to_dataframe(csv_text)
     print(df.head())
@@ -79,14 +79,14 @@ with Client(lang="en") as client:
 | Endpoint | Client Method | Description |
 |----------|---------------|-------------|
 | `/api/v1/getDataCode` | `get_data_code()`, `iter_data_code()`, `get_data_code_csv()` | Fetch data by series code |
-| `/api/v1/getDataLayer` | `get_data_layer()`, `iter_data_layer()`, `get_data_layer_csv()` | Fetch data by hierarchy layer |
+| `/api/v1/getDataLayer` | `get_data_layer()`, `iter_data_layer()`, `get_data_layer_csv()` | Fetch data by series code |
 | `/api/v1/getMetadata` | `get_metadata()`, `get_metadata_csv()` | Fetch series catalogue |
 
 ## Documentation
 
-- [Getting Started](https://obichan117.github.io/boj-ts-api/getting-started/)
-- [API Reference](https://obichan117.github.io/boj-ts-api/api-reference/)
-- [Upstream BOJ API Reference](https://obichan117.github.io/boj-ts-api/boj-api/)
+- [Getting Started](https://obichan117.github.io/pyboj/getting-started/)
+- [API Reference](https://obichan117.github.io/pyboj/api-reference/)
+- [Upstream BOJ API Reference](https://obichan117.github.io/pyboj/boj-api/)
 - [OpenAPI Specification](openapi.yaml)
 
 ## Official BOJ Resources

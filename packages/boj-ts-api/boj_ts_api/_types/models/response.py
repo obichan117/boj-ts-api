@@ -11,8 +11,8 @@ from boj_ts_api._types.models.metadata import MetadataRecord
 from boj_ts_api._types.models.series import SeriesResult
 
 
-class DataResponse(BOJBaseModel):
-    """Envelope for Code/Layer API JSON responses."""
+class ResponseEnvelope(BOJBaseModel):
+    """Shared envelope fields for all BOJ API JSON responses."""
 
     STATUS: int
     MESSAGEID: str = ""
@@ -20,16 +20,15 @@ class DataResponse(BOJBaseModel):
     DATE: str = ""
     PARAMETER: dict[str, Any] | None = None
     NEXTPOSITION: int | None = None
+
+
+class DataResponse(ResponseEnvelope):
+    """Envelope for Code/Layer API JSON responses."""
+
     RESULTSET: list[SeriesResult] = Field(default_factory=list)
 
 
-class MetadataResponse(BOJBaseModel):
+class MetadataResponse(ResponseEnvelope):
     """Envelope for Metadata API JSON responses."""
 
-    STATUS: int
-    MESSAGEID: str = ""
-    MESSAGE: str = ""
-    DATE: str = ""
-    PARAMETER: dict[str, Any] | None = None
-    NEXTPOSITION: int | None = None
     RESULTSET: list[MetadataRecord] = Field(default_factory=list)

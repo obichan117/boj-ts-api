@@ -6,6 +6,7 @@ from boj_ts_api._types.models import (
     DataResponse,
     MetadataRecord,
     MetadataResponse,
+    ResponseEnvelope,
     SeriesResult,
     SeriesValues,
 )
@@ -25,6 +26,7 @@ __all__ = [
     "Lang",
     "MetadataRecord",
     "MetadataResponse",
+    "ResponseEnvelope",
     "SeriesResult",
     "SeriesValues",
 ]

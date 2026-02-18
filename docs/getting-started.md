@@ -3,12 +3,6 @@
 ## Installation
 
 ```bash
-pip install pyboj[pandas]
-```
-
-Or without pandas:
-
-```bash
 pip install pyboj
 ```
 

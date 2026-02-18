@@ -80,5 +80,5 @@ uv run python -m pytest --tb=short -v
 ## Dependencies
 
 - boj-ts-api: `httpx`, `pydantic>=2.0`
-- pyboj: `boj-ts-api`, optional `pandas`
+- pyboj: `boj-ts-api`, `pandas`
 - Dev: `pytest`, `pytest-asyncio`, `respx`, `ruff`, `mkdocs`

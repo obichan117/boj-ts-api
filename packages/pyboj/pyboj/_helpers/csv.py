@@ -1,14 +1,14 @@
-"""Optional pandas helper for converting CSV text to DataFrames."""
+"""Pandas helper for converting CSV text to DataFrames."""
 
 from __future__ import annotations
 
 import io
 
+import pandas as pd
 
-def csv_to_dataframe(csv_text: str | bytes, *, encoding: str = "utf-8"):
+
+def csv_to_dataframe(csv_text: str | bytes, *, encoding: str = "utf-8") -> pd.DataFrame:
     """Convert CSV text from the BOJ API into a pandas DataFrame.
-
-    Requires pandas to be installed (``pip install pyboj[pandas]``).
 
     Parameters
     ----------
@@ -24,14 +24,6 @@ def csv_to_dataframe(csv_text: str | bytes, *, encoding: str = "utf-8"):
     -------
     pandas.DataFrame
     """
-    try:
-        import pandas as pd
-    except ImportError as exc:
-        raise ImportError(
-            "pandas is required for csv_to_dataframe(). "
-            "Install it with: pip install pyboj[pandas]"
-        ) from exc
-
     if isinstance(csv_text, bytes):
         csv_text = csv_text.decode(encoding)
 

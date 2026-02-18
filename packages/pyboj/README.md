@@ -11,8 +11,7 @@ Built on top of [boj-ts-api](https://pypi.org/project/boj-ts-api/) for advanced 
 ## Installation
 
 ```bash
-pip install pyboj[pandas]   # recommended — includes DataFrame support
-pip install pyboj            # without pandas
+pip install pyboj
 ```
 
 ## Quick Start

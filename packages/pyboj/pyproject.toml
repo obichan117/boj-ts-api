@@ -25,10 +25,8 @@ classifiers = [
 ]
 dependencies = [
     "boj-ts-api",
+    "pandas>=2.0",
 ]
-
-[project.optional-dependencies]
-pandas = ["pandas>=2.0"]
 
 [project.urls]
 Repository = "https://github.com/obichan117/pyboj"

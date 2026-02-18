@@ -11,9 +11,8 @@ Wraps the official BOJ API ([announced 2026-02-18](https://www.boj.or.jp/statist
 ## Installation
 
 ```bash
-pip install pyboj[pandas]   # recommended — includes DataFrame support
-pip install pyboj            # without pandas
-pip install boj-ts-api       # low-level client only
+pip install pyboj            # includes pandas
+pip install boj-ts-api       # low-level client only (no pandas)
 ```
 
 ## Quick Start
@@ -130,7 +129,7 @@ Named constants for all BOJ database codes — use instead of magic strings:
 
 | Package | Install | Description |
 |---------|---------|-------------|
-| **pyboj** | `pip install pyboj` | High-level client with domain wrappers and pandas support |
+| **pyboj** | `pip install pyboj` | High-level client with domain wrappers (includes pandas) |
 | **boj-ts-api** | `pip install boj-ts-api` | Low-level typed API client |
 
 ## Low-Level API

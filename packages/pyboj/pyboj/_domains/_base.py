@@ -82,20 +82,12 @@ class Series:
     def to_dataframe(self):
         """Return a :class:`pandas.DataFrame` with a ``DatetimeIndex``.
 
-        Requires pandas (``pip install pyboj[pandas]``).
-
         Returns
         -------
         pandas.DataFrame
             Single column ``value`` indexed by ``date``.
         """
-        try:
-            import pandas as pd
-        except ImportError as exc:
-            raise ImportError(
-                "pandas is required for to_dataframe(). "
-                "Install it with: pip install pyboj[pandas]"
-            ) from exc
+        import pandas as pd
 
         index = pd.DatetimeIndex(self.dates, name="date")
         return pd.DataFrame({"value": self.values}, index=index)

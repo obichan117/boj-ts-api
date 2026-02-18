@@ -888,10 +888,6 @@ version = "0.1.0"
 source = { editable = "packages/pyboj" }
 dependencies = [
     { name = "boj-ts-api" },
-]
-
-[package.optional-dependencies]
-pandas = [
     { name = "pandas", version = "2.3.3", source = { registry = "https://pypi.org/simple" }, marker = "python_full_version < '3.11'" },
     { name = "pandas", version = "3.0.1", source = { registry = "https://pypi.org/simple" }, marker = "python_full_version >= '3.11'" },
 ]
@@ -899,9 +895,8 @@ pandas = [
 [package.metadata]
 requires-dist = [
     { name = "boj-ts-api", editable = "packages/boj-ts-api" },
-    { name = "pandas", marker = "extra == 'pandas'", specifier = ">=2.0" },
+    { name = "pandas", specifier = ">=2.0" },
 ]
-provides-extras = ["pandas"]
 
 [[package]]
 name = "pyboj-workspace"

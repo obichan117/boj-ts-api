@@ -1,0 +1,26 @@
+{
+  "STATUS": 200,
+  "MESSAGEID": "",
+  "MESSAGE": "",
+  "DATE": "2025-12-02T16:00:00.000+09:00",
+  "PARAMETER": {
+    "db": "FM08",
+    "frequency": "D",
+    "layer": "1,1",
+    "format": "json",
+    "lang": "en"
+  },
+  "NEXTPOSITION": null,
+  "RESULTSET": [
+    {
+      "SERIES_CODE": "FM08'MAINAVG",
+      "NAME_OF_TIME_SERIES": "Call Rates (Uncollateralized Overnight)/Average",
+      "FREQUENCY": "D",
+      "LAST_UPDATE": 20251201,
+      "VALUES": {
+        "SURVEY_DATES": [20251125, 20251126, 20251127, 20251128],
+        "VALUES": [0.227, 0.228, 0.229, 0.228]
+      }
+    }
+  ]
+}

@@ -24,6 +24,7 @@ dev = [
     "mkdocs-material>=9.0",
     "mkdocstrings[python]>=0.24",
     "pandas>=2.0",
+    "twine>=6.0",
 ]
 
 [tool.ruff]

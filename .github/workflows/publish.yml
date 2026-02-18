@@ -1,0 +1,40 @@
+name: Publish to PyPI
+
+on:
+  release:
+    types: [published]
+
+permissions:
+  id-token: write
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: astral-sh/setup-uv@v5
+        with:
+          enable-cache: true
+
+      - name: Set up Python
+        run: uv python install 3.12
+
+      - name: Install dependencies
+        run: uv sync --all-extras
+
+      - name: Run tests
+        run: uv run python -m pytest --tb=short -q
+
+      - name: Build boj-ts-api
+        run: uv build --package boj-ts-api
+
+      - name: Build pyboj
+        run: uv build --package pyboj
+
+      - name: Publish boj-ts-api
+        run: uv run twine upload dist/boj_ts_api-* -u __token__ -p ${{ secrets.PYPI_TOKEN }}
+
+      - name: Publish pyboj
+        run: uv run twine upload dist/pyboj-* -u __token__ -p ${{ secrets.PYPI_TOKEN }}

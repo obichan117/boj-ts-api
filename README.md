@@ -133,26 +133,9 @@ Named constants for all BOJ database codes — use instead of magic strings:
 | **pyboj** | `pip install pyboj` | High-level client with domain wrappers and pandas support |
 | **boj-ts-api** | `pip install boj-ts-api` | Low-level typed API client |
 
-## Advanced: Low-Level API
+## Low-Level API
 
-```python
-from boj_ts_api import Client, Lang
-
-with Client(lang=Lang.EN) as client:
-    # Fetch data by series code
-    resp = client.get_data_code(db="CO", code="TK99F1000601GCQ01000")
-    for series in resp.RESULTSET:
-        print(series.SERIES_CODE, series.VALUES.VALUES)
-
-    # Auto-paginate
-    for series in client.iter_data_code(db="CO", code="TK99F1000601GCQ01000"):
-        print(series.SERIES_CODE, len(series.VALUES.SURVEY_DATES), "periods")
-
-    # Metadata
-    meta = client.get_metadata(db="FM08")
-    for rec in meta.RESULTSET[:3]:
-        print(rec.SERIES_CODE, rec.NAME_OF_TIME_SERIES)
-```
+For direct, typed API access without domain wrappers, see [boj-ts-api](packages/boj-ts-api/).
 
 ## Documentation
 

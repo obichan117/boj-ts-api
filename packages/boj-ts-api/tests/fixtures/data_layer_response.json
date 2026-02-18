@@ -1,6 +1,6 @@
 {
   "STATUS": 200,
-  "MESSAGEID": "",
+  "MESSAGEID": "M181000I",
   "MESSAGE": "",
   "DATE": "2025-12-02T16:00:00.000+09:00",
   "PARAMETER": {
@@ -13,9 +13,9 @@
   "NEXTPOSITION": null,
   "RESULTSET": [
     {
-      "SERIES_CODE": "FM08'MAINAVG",
+      "SERIES_CODE": "MAINAVG",
       "NAME_OF_TIME_SERIES": "Call Rates (Uncollateralized Overnight)/Average",
-      "FREQUENCY": "D",
+      "FREQUENCY": "DAILY",
       "LAST_UPDATE": 20251201,
       "VALUES": {
         "SURVEY_DATES": [20251125, 20251126, 20251127, 20251128],

@@ -14,6 +14,14 @@ def parse_survey_date(raw: int | str) -> datetime.date:
     * ``YYYYMM`` (6 digits) → first day of month
     * ``YYYY`` (4 digits) → first day of year
 
+    .. note::
+
+       Quarterly (``YYYYQQ``) and semi-annual (``YYYYHH``) dates share the
+       6-digit format with monthly dates and are parsed as ``YYYYMM``.  This
+       gives correct results for Q1/H1 but maps Q2→Feb, Q3→Mar, Q4→Apr and
+       H2→Feb instead of their true calendar months.  Proper disambiguation
+       requires the series frequency, which is not available here.
+
     Parameters
     ----------
     raw:

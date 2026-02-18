@@ -65,3 +65,50 @@
 ## Utilities
 
 ::: pyboj._helpers.csv.csv_to_dataframe
+
+---
+
+## pyboj High-Level API
+
+### Database Enum
+
+::: pyboj._config.Database
+
+### Domain Wrappers
+
+Domain wrappers wrap raw `SeriesResult` objects and add parsed dates, typed values, and domain-specific properties.
+
+#### Base
+
+::: pyboj._domains._base._DomainSeries
+    options:
+      members:
+        - series_code
+        - name
+        - name_jp
+        - unit
+        - frequency
+        - category
+        - dates
+        - values
+        - to_dataframe
+
+#### ExchangeRate
+
+::: pyboj._domains.exchange_rate.ExchangeRate
+
+::: pyboj._domains.exchange_rate.RateType
+
+#### InterestRate
+
+::: pyboj._domains.interest_rate.InterestRate
+
+::: pyboj._domains.interest_rate.RateCategory
+
+::: pyboj._domains.interest_rate.Collateralization
+
+#### PriceIndex
+
+::: pyboj._domains.price_index.PriceIndex
+
+::: pyboj._domains.price_index.IndexType

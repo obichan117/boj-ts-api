@@ -49,4 +49,4 @@ class TestIterDataLayer:
             results = list(client.iter_data_layer(db="FM08", frequency=Frequency.D, layer="1,1"))
 
         assert len(results) == 1
-        assert results[0].SERIES_CODE == "FM08'MAINAVG"
+        assert results[0].SERIES_CODE == "MAINAVG"

@@ -32,7 +32,7 @@ class TestExchangeRate:
 
     def test_frequency(self, exchange_rate_results):
         rate = ExchangeRate(exchange_rate_results[0])
-        assert rate.frequency == "D"
+        assert rate.frequency == "DAILY"
 
 
 class TestCurrencyPair:

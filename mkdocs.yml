@@ -28,6 +28,7 @@ nav:
   - Getting Started: getting-started.md
   - API Reference: api-reference.md
   - BOJ API Reference: boj-api.md
+  - OpenAPI Spec: openapi-spec.md
 
 plugins:
   - search
@@ -44,3 +45,5 @@ markdown_extensions:
   - pymdownx.superfences
   - admonition
   - pymdownx.details
+  - attr_list
+  - md_in_html

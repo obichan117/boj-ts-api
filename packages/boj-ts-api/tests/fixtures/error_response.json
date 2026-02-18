@@ -1,7 +1,7 @@
 {
   "STATUS": 400,
-  "MESSAGEID": "E0001",
-  "MESSAGE": "Required parameter 'db' is missing.",
+  "MESSAGEID": "M181004E",
+  "MESSAGE": "DBが指定されていません。",
   "DATE": "2025-12-02T15:00:00.000+09:00",
   "PARAMETER": null,
   "NEXTPOSITION": null,

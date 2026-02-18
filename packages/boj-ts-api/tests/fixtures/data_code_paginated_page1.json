@@ -1,6 +1,6 @@
 {
   "STATUS": 200,
-  "MESSAGEID": "",
+  "MESSAGEID": "M181000I",
   "MESSAGE": "",
   "DATE": "2025-12-02T13:13:14.587+09:00",
   "PARAMETER": {
@@ -14,7 +14,7 @@
     {
       "SERIES_CODE": "TK99F1000601GCQ01000",
       "NAME_OF_TIME_SERIES": "All Items, Ku-area of Tokyo",
-      "FREQUENCY": "M",
+      "FREQUENCY": "MONTHLY",
       "LAST_UPDATE": 20250520,
       "VALUES": {
         "SURVEY_DATES": [202401, 202402],

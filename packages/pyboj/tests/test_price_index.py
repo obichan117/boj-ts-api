@@ -12,7 +12,7 @@ from pyboj._domains.price_index import IndexType, PriceIndex
 class TestPriceIndex:
     def test_series_code(self, price_index_results):
         idx = PriceIndex(price_index_results[0])
-        assert idx.series_code == "PR01'PRCG100000"
+        assert idx.series_code == "PRCG100000"
 
     def test_dates(self, price_index_results):
         idx = PriceIndex(price_index_results[0])
@@ -76,7 +76,7 @@ class TestRepr:
         idx = PriceIndex(price_index_results[0])
         r = repr(idx)
         assert "PriceIndex" in r
-        assert "PR01'PRCG100000" in r
+        assert "PRCG100000" in r
         assert "observations=4" in r
 
 

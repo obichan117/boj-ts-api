@@ -1,6 +1,6 @@
 {
   "STATUS": 200,
-  "MESSAGEID": "",
+  "MESSAGEID": "M181000I",
   "MESSAGE": "",
   "DATE": "2025-12-02T14:00:00.000+09:00",
   "PARAMETER": {
@@ -11,12 +11,12 @@
   "NEXTPOSITION": null,
   "RESULTSET": [
     {
-      "SERIES_CODE": "FM08'MAINAVG",
+      "SERIES_CODE": "MAINAVG",
       "NAME_OF_TIME_SERIES": "Call Rates (Uncollateralized Overnight)/Average",
       "NAME_OF_TIME_SERIES_J": "コールレート(無担保オーバーナイト物)/平均",
       "UNIT": "% per annum",
       "UNIT_J": "年利率%",
-      "FREQUENCY": "D",
+      "FREQUENCY": "DAILY",
       "CATEGORY": "Financial Markets",
       "CATEGORY_J": "金融市場",
       "LAYER1": "1",
@@ -27,18 +27,16 @@
       "START_OF_THE_TIME_SERIES": "19850701",
       "END_OF_THE_TIME_SERIES": "20251128",
       "LAST_UPDATE": 20251201,
-      "UNIT_NOTES": null,
-      "UNIT_NOTES_J": null,
       "NOTES": "Source: BOJ",
       "NOTES_J": "出所：日本銀行"
     },
     {
-      "SERIES_CODE": "FM08'MAINHIGH",
+      "SERIES_CODE": "MAINHIGH",
       "NAME_OF_TIME_SERIES": "Call Rates (Uncollateralized Overnight)/High",
       "NAME_OF_TIME_SERIES_J": "コールレート(無担保オーバーナイト物)/最高",
       "UNIT": "% per annum",
       "UNIT_J": "年利率%",
-      "FREQUENCY": "D",
+      "FREQUENCY": "DAILY",
       "CATEGORY": "Financial Markets",
       "CATEGORY_J": "金融市場",
       "LAYER1": "1",
@@ -49,8 +47,6 @@
       "START_OF_THE_TIME_SERIES": "19850701",
       "END_OF_THE_TIME_SERIES": "20251128",
       "LAST_UPDATE": 20251201,
-      "UNIT_NOTES": null,
-      "UNIT_NOTES_J": null,
       "NOTES": "Source: BOJ",
       "NOTES_J": "出所：日本銀行"
     }

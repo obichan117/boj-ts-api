@@ -38,7 +38,7 @@ class TestSeriesResult:
         item = data_code_json["RESULTSET"][0]
         sr = SeriesResult.model_validate(item)
         assert sr.SERIES_CODE == "TK99F1000601GCQ01000"
-        assert sr.FREQUENCY == "M"
+        assert sr.FREQUENCY == "MONTHLY"
         assert sr.UNIT == "CY2020=100"
         assert len(sr.VALUES.SURVEY_DATES) == 4
         assert sr.VALUES.VALUES[0] == 106.9
@@ -64,16 +64,16 @@ class TestDataResponse:
     def test_parse_error(self, error_json: dict):
         resp = DataResponse.model_validate(error_json)
         assert resp.STATUS == 400
-        assert resp.MESSAGEID == "E0001"
-        assert "missing" in resp.MESSAGE.lower()
+        assert resp.MESSAGEID == "M181004E"
+        assert "DB" in resp.MESSAGE
 
 
 class TestMetadataRecord:
     def test_parse_full(self, metadata_json: dict):
         item = metadata_json["RESULTSET"][0]
         rec = MetadataRecord.model_validate(item)
-        assert rec.SERIES_CODE == "FM08'MAINAVG"
-        assert rec.FREQUENCY == "D"
+        assert rec.SERIES_CODE == "MAINAVG"
+        assert rec.FREQUENCY == "DAILY"
         assert rec.LAYER1 == "1"
         assert rec.LAYER3 is None
         assert rec.NOTES == "Source: BOJ"
@@ -89,5 +89,5 @@ class TestMetadataResponse:
         resp = MetadataResponse.model_validate(metadata_json)
         assert resp.STATUS == 200
         assert len(resp.RESULTSET) == 2
-        assert resp.RESULTSET[0].SERIES_CODE == "FM08'MAINAVG"
-        assert resp.RESULTSET[1].SERIES_CODE == "FM08'MAINHIGH"
+        assert resp.RESULTSET[0].SERIES_CODE == "MAINAVG"
+        assert resp.RESULTSET[1].SERIES_CODE == "MAINHIGH"

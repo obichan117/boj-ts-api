@@ -1,15 +1,15 @@
 {
   "STATUS": 200,
-  "MESSAGEID": "",
+  "MESSAGEID": "M181000I",
   "MESSAGE": "",
   "DATE": "2025-12-02T13:00:00.000+09:00",
   "PARAMETER": {
     "db": "FM08",
-    "code": "FXERD01;FXERC01",
+    "code": "FXERD01,FXERC01",
     "format": "json",
     "lang": "en",
-    "startDate": "20240101",
-    "endDate": "20240105"
+    "startDate": "202401",
+    "endDate": "202401"
   },
   "NEXTPOSITION": null,
   "RESULTSET": [
@@ -19,7 +19,7 @@
       "NAME_OF_TIME_SERIES_J": "ドル・円 スポット 9時時点",
       "UNIT": "Yen",
       "UNIT_J": "円",
-      "FREQUENCY": "D",
+      "FREQUENCY": "DAILY",
       "CATEGORY": "Foreign Exchange Rates",
       "CATEGORY_J": "外国為替相場",
       "LAST_UPDATE": 20250101,
@@ -34,7 +34,7 @@
       "NAME_OF_TIME_SERIES_J": "ユーロ・円 仲値",
       "UNIT": "Yen",
       "UNIT_J": "円",
-      "FREQUENCY": "D",
+      "FREQUENCY": "DAILY",
       "CATEGORY": "Foreign Exchange Rates",
       "CATEGORY_J": "外国為替相場",
       "LAST_UPDATE": 20250101,
@@ -49,7 +49,7 @@
       "NAME_OF_TIME_SERIES_J": "ドル・円 最高値",
       "UNIT": "Yen",
       "UNIT_J": "円",
-      "FREQUENCY": "D",
+      "FREQUENCY": "DAILY",
       "CATEGORY": "Foreign Exchange Rates",
       "CATEGORY_J": "外国為替相場",
       "LAST_UPDATE": 20250101,

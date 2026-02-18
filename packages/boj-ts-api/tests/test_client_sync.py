@@ -68,7 +68,7 @@ class TestGetDataLayer:
             resp = client.get_data_layer(db="FM08", frequency=Frequency.D, layer="1,1")
 
         assert resp.STATUS == 200
-        assert resp.RESULTSET[0].SERIES_CODE == "FM08'MAINAVG"
+        assert resp.RESULTSET[0].SERIES_CODE == "MAINAVG"
 
 
 class TestGetMetadata:
@@ -85,11 +85,11 @@ class TestGetMetadata:
 
     @respx.mock
     def test_csv_returns_text(self):
-        csv = "SERIES_CODE,FREQUENCY\nFM08'MAINAVG,D\n"
+        csv = "SERIES_CODE,FREQUENCY\nMAINAVG,DAILY\n"
         respx.get(f"{BASE_URL}{ENDPOINT_METADATA}").mock(
             return_value=httpx.Response(200, text=csv)
         )
         with Client(lang=Lang.EN) as client:
             result = client.get_metadata_csv(db="FM08")
 
-        assert "FM08'MAINAVG" in result
+        assert "MAINAVG" in result

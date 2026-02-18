@@ -1,11 +1,11 @@
 {
   "STATUS": 200,
-  "MESSAGEID": "",
+  "MESSAGEID": "M181000I",
   "MESSAGE": "",
   "DATE": "2025-12-02T13:00:00.000+09:00",
   "PARAMETER": {
     "db": "PR01",
-    "code": "PR01'PRCG100000;PR01'PRCGYY0000",
+    "code": "PRCG100000,PRCGYY0000",
     "format": "json",
     "lang": "en",
     "startDate": "202401",
@@ -14,12 +14,12 @@
   "NEXTPOSITION": null,
   "RESULTSET": [
     {
-      "SERIES_CODE": "PR01'PRCG100000",
+      "SERIES_CODE": "PRCG100000",
       "NAME_OF_TIME_SERIES": "Producer Price Index, All commodities",
       "NAME_OF_TIME_SERIES_J": "国内企業物価指数 総平均",
       "UNIT": "CY2020 average=100",
       "UNIT_J": "2020年平均=100",
-      "FREQUENCY": "M",
+      "FREQUENCY": "MONTHLY",
       "CATEGORY": "Producer Price Index",
       "CATEGORY_J": "国内企業物価指数",
       "LAST_UPDATE": 20250501,
@@ -29,12 +29,12 @@
       }
     },
     {
-      "SERIES_CODE": "PR01'PRCGYY0000",
+      "SERIES_CODE": "PRCGYY0000",
       "NAME_OF_TIME_SERIES": "Producer Price Index, All commodities, Year-on-year percent change",
       "NAME_OF_TIME_SERIES_J": "国内企業物価指数 総平均 前年比",
       "UNIT": "%",
       "UNIT_J": "前年比％",
-      "FREQUENCY": "M",
+      "FREQUENCY": "MONTHLY",
       "CATEGORY": "Producer Price Index",
       "CATEGORY_J": "国内企業物価指数",
       "LAST_UPDATE": 20250501,
@@ -44,12 +44,12 @@
       }
     },
     {
-      "SERIES_CODE": "PR02'SPDC100000",
+      "SERIES_CODE": "SPDC100000",
       "NAME_OF_TIME_SERIES": "Services Producer Price Index, All items",
       "NAME_OF_TIME_SERIES_J": "企業向けサービス価格指数 総平均",
       "UNIT": "CY2020 average=100",
       "UNIT_J": "2020年平均=100",
-      "FREQUENCY": "M",
+      "FREQUENCY": "MONTHLY",
       "CATEGORY": "Services Producer Price Index",
       "CATEGORY_J": "企業向けサービス価格指数",
       "LAST_UPDATE": 20250501,

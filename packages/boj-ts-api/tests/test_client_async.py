@@ -70,7 +70,7 @@ class TestAsyncGetDataLayer:
             resp = await client.get_data_layer(db="FM08", frequency=Frequency.D, layer="1,1")
 
         assert resp.STATUS == 200
-        assert resp.RESULTSET[0].SERIES_CODE == "FM08'MAINAVG"
+        assert resp.RESULTSET[0].SERIES_CODE == "MAINAVG"
 
 
 class TestAsyncGetMetadata:

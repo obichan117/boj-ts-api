@@ -29,8 +29,8 @@ class TestBOJAPIError:
             client.get_data_code(db="CO", code="INVALID")
 
         assert exc_info.value.status == 400
-        assert exc_info.value.message_id == "E0001"
-        assert "missing" in exc_info.value.api_message.lower()
+        assert exc_info.value.message_id == "M181004E"
+        assert "DB" in exc_info.value.api_message
 
 
 class TestBOJRequestError:

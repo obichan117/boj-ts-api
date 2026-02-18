@@ -88,6 +88,90 @@ async def main():
 asyncio.run(main())
 ```
 
+## Using the Database Enum
+
+The `Database` enum provides named constants for all BOJ database codes, so you don't have to memorize raw strings like `"FM08"` or `"CO"`:
+
+```python
+from pyboj import Client, Lang, Database
+
+with Client(lang=Lang.EN) as client:
+    # Instead of db="FM08"
+    resp = client.get_data_code(
+        db=Database.EXCHANGE_RATES,
+        code="FM08'MAINAVG",
+    )
+
+    # Instead of db="CO"
+    meta = client.get_metadata(db=Database.TANKAN)
+```
+
+## Domain Wrappers
+
+`pyboj` provides domain wrapper objects that add parsed dates, typed numeric values, and domain-specific properties on top of raw `SeriesResult` objects.
+
+### ExchangeRate
+
+Wraps exchange rate series from the FM08 / FM09 databases. Automatically detects the currency pair and rate type from the series name.
+
+```python
+from pyboj import Client, Lang, Database, ExchangeRate
+
+with Client(lang=Lang.EN) as client:
+    resp = client.get_data_code(
+        db=Database.EXCHANGE_RATES,
+        code="FM08'MAINAVG",
+    )
+    rate = ExchangeRate(resp.RESULTSET[0])
+
+    print(rate.currency_pair)   # "USD/JPY"
+    print(rate.rate_type)       # RateType.AVERAGE
+    print(rate.dates[:3])       # [datetime.date(2024, 1, 1), ...]
+    print(rate.values[:3])      # [148.12, 149.56, 151.34]
+
+    # Convert to pandas DataFrame
+    df = rate.to_dataframe()
+    print(df.head())
+```
+
+### InterestRate
+
+Wraps interest rate series from FM01, FM02, IR01-IR04. Detects rate category, collateralization type, and tenor.
+
+```python
+from pyboj import Client, Lang, Database, InterestRate
+
+with Client(lang=Lang.EN) as client:
+    resp = client.get_data_code(
+        db=Database.CALL_RATES,
+        code="FM01'MAINAVG",
+    )
+    rate = InterestRate(resp.RESULTSET[0])
+
+    print(rate.rate_category)      # RateCategory.CALL_RATE
+    print(rate.collateralization)   # Collateralization.UNCOLLATERALIZED
+    print(rate.tenor)               # "Overnight"
+```
+
+### PriceIndex
+
+Wraps price index series from PR01-PR04. Detects index type, base year, and whether the series is year-on-year change.
+
+```python
+from pyboj import Client, Lang, Database, PriceIndex
+
+with Client(lang=Lang.EN) as client:
+    resp = client.get_data_code(
+        db=Database.PRODUCER_PRICE_INDEX,
+        code="PR01'IALL_IALL000000000",
+    )
+    idx = PriceIndex(resp.RESULTSET[0])
+
+    print(idx.index_type)    # IndexType.PRODUCER
+    print(idx.base_year)     # "CY2020"
+    print(idx.is_yoy_change) # False
+```
+
 ## Finding Series Codes
 
 To discover available series codes, use the [BOJ Time-Series Search Site](https://www.stat-search.boj.or.jp/) or the metadata endpoint:

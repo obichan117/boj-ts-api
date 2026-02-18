@@ -23,88 +23,35 @@ from pyboj import BOJ, Currency, Frequency
 
 boj = BOJ()
 
-# Fetch USD/JPY daily exchange rates for Jan-Mar 2024
+# Exchange rates — no magic strings
 rates = boj.exchange_rates(
     currency=Currency.USD_JPY,
     frequency=Frequency.D,
     start_date="202401",
-    end_date="202403",
 )
-
 for r in rates:
-    print(r.currency_pair, r.rate_type)
-    print(r.dates[:3])    # [datetime.date(2024, 1, 4), ...]
-    print(r.values[:3])   # [144.62, 145.30, ...]
+    print(r.currency_pair, r.rate_type, r.values[:3])
+    df = r.to_dataframe()  # pandas DataFrame
 
-# Convert to pandas DataFrame
-df = rates[0].to_dataframe()
-df.plot(title="USD/JPY", figsize=(10, 4))
-```
-
-### More Examples
-
-```python
-from pyboj import (
-    BOJ, Currency, Frequency, Database,
-    RateCategory, TankanIndustry, TankanSize,
-    IndexType, BopAccount, MonetaryComponent, IndustrySector,
-)
-
-boj = BOJ()
-
-# Interest rates — filter by category
-rates = boj.interest_rates(
-    category=RateCategory.CALL_RATE,
-    frequency=Frequency.D,
-    start_date="202401",
-)
+# Interest rates
+rates = boj.interest_rates(frequency=Frequency.D)
 for r in rates:
     print(r.rate_category, r.collateralization, r.tenor)
-    #  RateCategory.CALL_RATE  Collateralization.UNCOLLATERALIZED  Overnight
 
-# TANKAN survey — filter by industry and enterprise size
-tankan = boj.tankan(
+# TANKAN survey
+from pyboj import TankanIndustry, TankanSize
+results = boj.tankan(
     industry=TankanIndustry.MANUFACTURING,
     size=TankanSize.LARGE,
-    start_date="202301",
 )
-for t in tankan[:3]:
-    print(t.industry, t.size, t.item, t.series_type)
 
 # Price indices
-indices = boj.price_indices(
-    index_type=IndexType.PRODUCER,
-    start_date="202401",
-)
-for idx in indices[:3]:
-    print(idx.index_type, idx.base_year, idx.is_yoy_change)
+indices = boj.price_indices(start_date="202401")
 
-# Balance of payments
-bop = boj.balance_of_payments(account=BopAccount.CURRENT)
-
-# Money & deposits — switch database with enum
-money = boj.money_deposits(
-    component=MonetaryComponent.M2,
-    db=Database.MONEY_STOCK,
-)
-
-# Loans by sector
-loans = boj.loans(sector=IndustrySector.MANUFACTURING)
-
-# Metadata — inspect available series before fetching
-records = boj.metadata(Database.EXCHANGE_RATES)
-for rec in records[:5]:
-    print(rec.SERIES_CODE, rec.FREQUENCY, rec.NAME_OF_TIME_SERIES)
-
-boj.close()
-```
-
-### Context Manager
-
-```python
-with BOJ() as boj:
-    rates = boj.exchange_rates(currency=Currency.USD_JPY)
-    # client auto-closes on exit
+# Balance of payments, Money/Deposits, Loans, and more
+bop = boj.balance_of_payments()
+money = boj.money_deposits()
+loans = boj.loans()
 ```
 
 ## API Overview

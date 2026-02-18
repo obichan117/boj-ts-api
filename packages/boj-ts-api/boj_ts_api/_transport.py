@@ -6,7 +6,7 @@ from typing import Any
 
 import httpx
 
-from boj_ts_api._types.config import BASE_URL
+from boj_ts_api._types.config import BASE_URL, DEFAULT_TIMEOUT
 from boj_ts_api._types.exceptions import BOJRequestError
 
 
@@ -16,7 +16,7 @@ class SyncTransport:
     def __init__(
         self,
         base_url: str = BASE_URL,
-        timeout: float = 30.0,
+        timeout: float = DEFAULT_TIMEOUT,
         client: httpx.Client | None = None,
     ) -> None:
         self._owns_client = client is None
@@ -50,7 +50,7 @@ class AsyncTransport:
     def __init__(
         self,
         base_url: str = BASE_URL,
-        timeout: float = 30.0,
+        timeout: float = DEFAULT_TIMEOUT,
         client: httpx.AsyncClient | None = None,
     ) -> None:
         self._owns_client = client is None

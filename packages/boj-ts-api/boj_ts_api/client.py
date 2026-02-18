@@ -8,7 +8,7 @@ from typing import Any
 from boj_ts_api._base_client import _BaseClient
 from boj_ts_api._parse import parse_data_response, parse_metadata_response
 from boj_ts_api._transport import SyncTransport
-from boj_ts_api._types.config import Format, Frequency, Lang
+from boj_ts_api._types.config import DEFAULT_TIMEOUT, Format, Frequency, Lang
 from boj_ts_api._types.models.response import DataResponse, MetadataResponse
 from boj_ts_api._types.models.series import SeriesResult
 
@@ -25,7 +25,7 @@ class Client(_BaseClient):
     def __init__(
         self,
         lang: Lang = Lang.EN,
-        timeout: float = 30.0,
+        timeout: float = DEFAULT_TIMEOUT,
         base_url: str | None = None,
     ) -> None:
         super().__init__(lang=lang, timeout=timeout)

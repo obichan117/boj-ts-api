@@ -5,6 +5,7 @@ from __future__ import annotations
 from typing import Any
 
 from boj_ts_api._types.config import (
+    DEFAULT_TIMEOUT,
     ENDPOINT_DATA_CODE,
     ENDPOINT_DATA_LAYER,
     ENDPOINT_METADATA,
@@ -18,7 +19,7 @@ from boj_ts_api._utils import _set_optional, _validate_required
 class _BaseClient:
     """Shared parameter-building logic for Client and AsyncClient."""
 
-    def __init__(self, lang: Lang = Lang.EN, timeout: float = 30.0) -> None:
+    def __init__(self, lang: Lang = Lang.EN, timeout: float = DEFAULT_TIMEOUT) -> None:
         self._lang = lang
         self._timeout = timeout
 

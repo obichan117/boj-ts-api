@@ -6,7 +6,7 @@ from collections.abc import Callable
 from typing import TypeVar
 
 from boj_ts_api import Client, Frequency, Lang, MetadataRecord, MetadataResponse
-from boj_ts_api._types.config import MAX_SERIES_PER_REQUEST
+from boj_ts_api._types.config import DEFAULT_TIMEOUT, MAX_SERIES_PER_REQUEST
 
 from pyboj._config import Database
 from pyboj._domains._base import Series
@@ -63,7 +63,7 @@ class BOJ:
             rates = boj.exchange_rates(currency=Currency.USD_JPY)
     """
 
-    def __init__(self, lang: Lang = Lang.EN, timeout: float = 30.0) -> None:
+    def __init__(self, lang: Lang = Lang.EN, timeout: float = DEFAULT_TIMEOUT) -> None:
         self._client = Client(lang=lang, timeout=timeout)
         self._metadata_cache: dict[str, MetadataResponse] = {}
 

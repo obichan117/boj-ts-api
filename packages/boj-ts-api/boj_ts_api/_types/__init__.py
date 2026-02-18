@@ -2,6 +2,7 @@
 
 from boj_ts_api._types.config import (
     BASE_URL,
+    DEFAULT_TIMEOUT,
     ENDPOINT_DATA_CODE,
     ENDPOINT_DATA_LAYER,
     ENDPOINT_METADATA,
@@ -30,6 +31,7 @@ from boj_ts_api._types.models import (
 
 __all__ = [
     "BASE_URL",
+    "DEFAULT_TIMEOUT",
     "BOJAPIError",
     "BOJBaseModel",
     "BOJError",

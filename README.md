@@ -5,6 +5,7 @@ Python client for the [Bank of Japan Time-Series Statistics API](https://www.sta
 [![PyPI](https://img.shields.io/pypi/v/pyboj)](https://pypi.org/project/pyboj/)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 [![Python 3.10+](https://img.shields.io/badge/python-3.10+-blue.svg)](https://www.python.org/downloads/)
+[![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/obichan117/pyboj/blob/main/examples/quickstart.ipynb)
 
 Wraps the official BOJ API ([announced 2026-02-18](https://www.boj.or.jp/statistics/outline/notice_2026/not260218a.htm)) for machine-readable access to Japan's central bank time-series data.
 

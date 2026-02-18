@@ -11,6 +11,9 @@ ENDPOINT_DATA_CODE = "/api/v1/getDataCode"
 ENDPOINT_DATA_LAYER = "/api/v1/getDataLayer"
 ENDPOINT_METADATA = "/api/v1/getMetadata"
 
+# Defaults
+DEFAULT_TIMEOUT = 30.0
+
 # API limits
 MAX_SERIES_PER_REQUEST = 250
 MAX_DATA_POINTS_PER_REQUEST = 60_000

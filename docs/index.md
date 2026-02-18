@@ -2,6 +2,8 @@
 
 Python client for the [Bank of Japan Time-Series Statistics API](https://www.stat-search.boj.or.jp/).
 
+[![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/obichan117/pyboj/blob/main/examples/quickstart.ipynb)
+
 This library wraps the official BOJ API announced on [February 18, 2026](https://www.boj.or.jp/statistics/outline/notice_2026/not260218a.htm), which provides machine-readable access (JSON/CSV) to the Bank of Japan's time-series statistical data.
 
 ## Features

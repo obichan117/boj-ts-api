@@ -5,6 +5,7 @@ Beginner-friendly Python client for the [Bank of Japan Time-Series Statistics AP
 [![PyPI](https://img.shields.io/pypi/v/pyboj)](https://pypi.org/project/pyboj/)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 [![Python 3.10+](https://img.shields.io/badge/python-3.10+-blue.svg)](https://www.python.org/downloads/)
+[![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/obichan117/pyboj/blob/main/examples/quickstart.ipynb)
 
 Built on top of [boj-ts-api](https://pypi.org/project/boj-ts-api/) for advanced users who need direct API access.
 

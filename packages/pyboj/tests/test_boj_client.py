@@ -4,6 +4,7 @@ from __future__ import annotations
 
 import respx
 from boj_ts_api._types.config import BASE_URL, ENDPOINT_DATA_CODE, ENDPOINT_METADATA
+from conftest import _load_json
 from pyboj import BOJ, Currency, Database, Frequency, RateType
 from pyboj._domains.balance_of_payments import BalanceOfPayments, BopAccount
 from pyboj._domains.balance_sheet import BalanceSheet, InstitutionType
@@ -19,8 +20,6 @@ from pyboj._domains.price_index import IndexType, PriceIndex
 from pyboj._domains.public_finance import PublicFinance
 from pyboj._domains.tankan import Tankan, TankanIndustry
 from pyboj._utils import frequency_matches
-
-from conftest import _load_json
 
 # ── Fixture data (loaded from JSON files) ────────────────────────────
 

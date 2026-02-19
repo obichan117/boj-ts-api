@@ -1,7 +1,6 @@
 """Tests for the layer tree builder and search utilities."""
 
 from boj_ts_api import MetadataRecord
-
 from pyboj._helpers.layer_tree import LayerNode, build_layer_tree, search_metadata
 
 

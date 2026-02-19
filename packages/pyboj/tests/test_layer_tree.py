@@ -1,21 +1,13 @@
 """Tests for the layer tree builder and search utilities."""
 
-from unittest.mock import MagicMock
+from boj_ts_api import MetadataRecord
 
 from pyboj._helpers.layer_tree import LayerNode, build_layer_tree, search_metadata
 
 
-def _make_record(**kwargs):
-    """Create a mock MetadataRecord with given fields."""
-    rec = MagicMock()
-    rec.SERIES_CODE = kwargs.get("SERIES_CODE")
-    rec.NAME_OF_TIME_SERIES = kwargs.get("NAME_OF_TIME_SERIES")
-    rec.NAME_OF_TIME_SERIES_J = kwargs.get("NAME_OF_TIME_SERIES_J")
-    rec.LAYER_CODE = kwargs.get("LAYER_CODE")
-    rec.FREQUENCY = kwargs.get("FREQUENCY")
-    rec.CATEGORY = kwargs.get("CATEGORY")
-    rec.CATEGORY_J = kwargs.get("CATEGORY_J")
-    return rec
+def _make_record(**kwargs) -> MetadataRecord:
+    """Create a MetadataRecord with given fields."""
+    return MetadataRecord(**kwargs)
 
 
 class TestBuildLayerTree:
@@ -29,7 +21,7 @@ class TestBuildLayerTree:
     def test_single_layer(self):
         records = [
             _make_record(
-                LAYER_CODE="1", NAME_OF_TIME_SERIES="Exchange Rates"
+                LAYER1=1, NAME_OF_TIME_SERIES="Exchange Rates"
             ),
             _make_record(
                 SERIES_CODE="FX01", NAME_OF_TIME_SERIES="USD/JPY"
@@ -47,16 +39,16 @@ class TestBuildLayerTree:
     def test_nested_layers(self):
         records = [
             _make_record(
-                LAYER_CODE="1", NAME_OF_TIME_SERIES="Level 1"
+                LAYER1=1, NAME_OF_TIME_SERIES="Level 1"
             ),
             _make_record(
-                LAYER_CODE="1,1", NAME_OF_TIME_SERIES="Level 1-1"
+                LAYER1=1, LAYER2=1, NAME_OF_TIME_SERIES="Level 1-1"
             ),
             _make_record(
                 SERIES_CODE="S01", NAME_OF_TIME_SERIES="Series 1"
             ),
             _make_record(
-                LAYER_CODE="1,2", NAME_OF_TIME_SERIES="Level 1-2"
+                LAYER1=1, LAYER2=2, NAME_OF_TIME_SERIES="Level 1-2"
             ),
             _make_record(
                 SERIES_CODE="S02", NAME_OF_TIME_SERIES="Series 2"
@@ -72,11 +64,11 @@ class TestBuildLayerTree:
     def test_multiple_top_layers(self):
         records = [
             _make_record(
-                LAYER_CODE="1", NAME_OF_TIME_SERIES="Category A"
+                LAYER1=1, NAME_OF_TIME_SERIES="Category A"
             ),
             _make_record(SERIES_CODE="A01"),
             _make_record(
-                LAYER_CODE="2", NAME_OF_TIME_SERIES="Category B"
+                LAYER1=2, NAME_OF_TIME_SERIES="Category B"
             ),
             _make_record(SERIES_CODE="B01"),
         ]

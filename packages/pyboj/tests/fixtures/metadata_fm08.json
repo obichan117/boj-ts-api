@@ -1,0 +1,37 @@
+{
+  "STATUS": 200,
+  "MESSAGEID": "M181000I",
+  "MESSAGE": "",
+  "DATE": "2025-12-02T14:00:00.000+09:00",
+  "PARAMETER": {
+    "db": "FM08",
+    "format": "json",
+    "lang": "en"
+  },
+  "NEXTPOSITION": null,
+  "RESULTSET": [
+    {
+      "SERIES_CODE": null,
+      "NAME_OF_TIME_SERIES": "Header Row",
+      "FREQUENCY": "DAILY"
+    },
+    {
+      "SERIES_CODE": "FXERD01",
+      "NAME_OF_TIME_SERIES": "U.S.dollar/Yen Spot Rate at 9 A.M.",
+      "FREQUENCY": "DAILY",
+      "CATEGORY": "Foreign Exchange Rates"
+    },
+    {
+      "SERIES_CODE": "FXERC01",
+      "NAME_OF_TIME_SERIES": "Euro/Yen Central Rate",
+      "FREQUENCY": "DAILY",
+      "CATEGORY": "Foreign Exchange Rates"
+    },
+    {
+      "SERIES_CODE": "FXERM01",
+      "NAME_OF_TIME_SERIES": "U.S.dollar/Yen Average Rate",
+      "FREQUENCY": "MONTHLY",
+      "CATEGORY": "Foreign Exchange Rates"
+    }
+  ]
+}

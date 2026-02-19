@@ -11,6 +11,11 @@ from boj_ts_api import DataResponse, SeriesResult
 FIXTURES_DIR = Path(__file__).parent / "fixtures"
 
 
+def _load_json(name: str) -> dict:
+    """Load a JSON fixture and return the raw dict."""
+    return json.loads((FIXTURES_DIR / name).read_text())
+
+
 def _load_fixture(name: str) -> DataResponse:
     """Load a JSON fixture and return a parsed DataResponse."""
     raw = json.loads((FIXTURES_DIR / name).read_text())

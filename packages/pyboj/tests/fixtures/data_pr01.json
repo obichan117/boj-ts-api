@@ -1,0 +1,30 @@
+{
+  "STATUS": 200,
+  "MESSAGEID": "M181000I",
+  "MESSAGE": "",
+  "DATE": "2025-12-02T13:00:00.000+09:00",
+  "PARAMETER": {
+    "db": "PR01",
+    "code": "PRCG100000",
+    "format": "json",
+    "lang": "en"
+  },
+  "NEXTPOSITION": null,
+  "RESULTSET": [
+    {
+      "SERIES_CODE": "PRCG100000",
+      "NAME_OF_TIME_SERIES": "Producer Price Index, All commodities",
+      "UNIT": "CY2020 average=100",
+      "FREQUENCY": "MONTHLY",
+      "CATEGORY": "Producer Price Index",
+      "VALUES": {
+        "SURVEY_DATES": [
+          202401
+        ],
+        "VALUES": [
+          120.1
+        ]
+      }
+    }
+  ]
+}

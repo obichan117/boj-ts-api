@@ -1,0 +1,19 @@
+{
+  "STATUS": 200,
+  "MESSAGEID": "M181000I",
+  "MESSAGE": "",
+  "DATE": "2025-12-02T14:00:00.000+09:00",
+  "PARAMETER": {
+    "db": "CO",
+    "format": "json",
+    "lang": "en"
+  },
+  "NEXTPOSITION": null,
+  "RESULTSET": [
+    {
+      "SERIES_CODE": "TK01",
+      "NAME_OF_TIME_SERIES": "Manufacturing, Large Enterprises, Business Conditions DI",
+      "FREQUENCY": "QUARTERLY"
+    }
+  ]
+}

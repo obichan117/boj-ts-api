@@ -69,12 +69,12 @@ Every method returns typed domain objects with parsed dates, numeric values, and
 | `balance_of_payments()` | `list[BalanceOfPayments]` | `BopAccount` | BP01 |
 | `money_deposits()` | `list[MoneyDeposit]` | `MonetaryComponent`, `Adjustment` | MD01 |
 | `loans()` | `list[Loan]` | `IndustrySector` | LA01 |
-| `financial_markets()` | `list[Series]` | — | FM03 |
-| `balance_sheets()` | `list[Series]` | — | BS01 |
-| `flow_of_funds()` | `list[Series]` | — | FF |
-| `boj_operations()` | `list[Series]` | — | OB01 |
-| `public_finance()` | `list[Series]` | — | PF01 |
-| `international()` | `list[Series]` | — | BIS |
+| `financial_markets()` | `list[FinancialMarket]` | `MarketSegment`, `InstrumentType` | FM03 |
+| `balance_sheets()` | `list[BalanceSheet]` | `AccountSide`, `InstitutionType` | BS01 |
+| `flow_of_funds()` | `list[FlowOfFunds]` | `FofSector`, `FofInstrument` | FF |
+| `boj_operations()` | `list[BOJOperation]` | `OperationType` | OB01 |
+| `public_finance()` | `list[PublicFinance]` | `FiscalItem` | PF01 |
+| `international()` | `list[InternationalStat]` | `StatCategory` | BIS |
 | `metadata()` | `list[MetadataRecord]` | — | — |
 
 All methods accept `frequency`, `start_date`, `end_date`. Methods with a default DB accept a `db` parameter to query other databases (e.g. `db=Database.MONEY_STOCK`).

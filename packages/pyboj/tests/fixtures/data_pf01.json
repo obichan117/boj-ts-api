@@ -1,0 +1,28 @@
+{
+  "STATUS": 200,
+  "MESSAGEID": "M181000I",
+  "MESSAGE": "",
+  "DATE": "2025-12-02T13:00:00.000+09:00",
+  "PARAMETER": {
+    "db": "PF01",
+    "code": "PF01_TAX",
+    "format": "json",
+    "lang": "en"
+  },
+  "NEXTPOSITION": null,
+  "RESULTSET": [
+    {
+      "SERIES_CODE": "PF01_TAX",
+      "NAME_OF_TIME_SERIES": "Tax Revenue",
+      "FREQUENCY": "MONTHLY",
+      "VALUES": {
+        "SURVEY_DATES": [
+          202401
+        ],
+        "VALUES": [
+          5500.0
+        ]
+      }
+    }
+  ]
+}

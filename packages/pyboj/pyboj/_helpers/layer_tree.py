@@ -40,11 +40,26 @@ class LayerNode:
         )
 
 
+def _build_layer_code(rec: MetadataRecord) -> str:
+    """Build a comma-separated layer code from LAYER1-LAYER5 fields.
+
+    The BOJ API stores hierarchy levels in separate fields (LAYER1, LAYER2, ...).
+    This converts them into a single string like ``"1,2"`` for tree building.
+    """
+    parts: list[str] = []
+    for val in (rec.LAYER1, rec.LAYER2, rec.LAYER3, rec.LAYER4, rec.LAYER5):
+        if val is not None:
+            parts.append(str(val))
+        else:
+            break
+    return ",".join(parts)
+
+
 def build_layer_tree(records: list[MetadataRecord]) -> LayerNode:
     """Build a hierarchical tree from flat BOJ metadata records.
 
     The BOJ API returns metadata as a flat list where hierarchy is
-    encoded in the record ordering and ``LAYER_CODE`` fields. Header
+    encoded in the record ordering and ``LAYER1``-``LAYER5`` fields. Header
     rows (``SERIES_CODE is None``) define layer nodes; data rows
     define leaf series.
 
@@ -65,8 +80,9 @@ def build_layer_tree(records: list[MetadataRecord]) -> LayerNode:
     for rec in records:
         if not rec.SERIES_CODE:
             # Header row → new layer node
-            layer_code = rec.LAYER_CODE or ""
-            # Determine level from layer code (e.g. "1" → level 1, "1,2" → level 2)
+            # Build layer code from LAYER1-LAYER5 fields
+            layer_code = _build_layer_code(rec)
+            # Determine level from layer depth (e.g. "1" → level 1, "1,2" → level 2)
             level = len(layer_code.split(",")) if layer_code else 1
             name = rec.NAME_OF_TIME_SERIES or rec.NAME_OF_TIME_SERIES_J or ""
 

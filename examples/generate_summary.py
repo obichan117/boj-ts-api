@@ -17,6 +17,7 @@ from pyboj import (
     Database,
     Frequency,
     IndexType,
+    Lang,
     MonetaryComponent,
     RateCategory,
 )
@@ -36,7 +37,7 @@ def _try(label, fn):
 
 def fetch_all():
     """Fetch one representative series per category."""
-    boj = BOJ()
+    boj = BOJ(lang=Lang.EN)
     data = {}
 
     # 1. Exchange rates — USD/JPY daily

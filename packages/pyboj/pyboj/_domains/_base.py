@@ -108,6 +108,41 @@ class Series:
         index = pd.DatetimeIndex([d for d, _ in pairs], name="date")
         return pd.DataFrame({"value": [v for _, v in pairs]}, index=index)
 
+    # ── Plotting ──────────────────────────────────────────────────────
+
+    def plot(
+        self,
+        *,
+        lang=None,
+        title: str | None = None,
+        ylabel: str | None = None,
+        figsize: tuple[float, float] = (10, 4),
+        **kwargs,
+    ):
+        """Plot this series.
+
+        Parameters
+        ----------
+        lang:
+            Language for labels (``Lang.JP`` or ``Lang.EN``).
+            Defaults to the language set on the ``BOJ`` client.
+        title:
+            Custom chart title.
+        ylabel:
+            Custom y-axis label.
+        figsize:
+            Figure size ``(width, height)`` in inches.
+        **kwargs:
+            Passed to ``ax.plot()``.
+
+        Returns
+        -------
+        matplotlib.axes.Axes
+        """
+        from pyboj._plotting import plot_series
+
+        return plot_series(self, lang=lang, title=title, ylabel=ylabel, figsize=figsize, **kwargs)
+
     # ── Display ───────────────────────────────────────────────────────
 
     def __repr__(self) -> str:

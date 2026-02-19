@@ -94,9 +94,16 @@ class BOJ:
             rates = boj.exchange_rates(currency=Currency.USD_JPY)
     """
 
-    def __init__(self, lang: Lang = Lang.EN, timeout: float = DEFAULT_TIMEOUT) -> None:
+    def __init__(self, lang: Lang = Lang.JP, timeout: float = DEFAULT_TIMEOUT) -> None:
         self._client = Client(lang=lang, timeout=timeout)
+        self._lang = lang
         self._metadata_cache: dict[str, MetadataResponse] = {}
+        try:
+            from pyboj._plotting._plot import set_default_lang
+
+            set_default_lang(lang)
+        except Exception:  # plotting deps may not be installed
+            pass
 
     def __enter__(self) -> BOJ:
         return self

@@ -17,6 +17,7 @@ Wraps the official BOJ API ([announced 2026-02-18](https://www.boj.or.jp/statist
 
 ```bash
 pip install pyboj            # includes pandas
+pip install pyboj[plot]      # + matplotlib & japanize-matplotlib for built-in plotting
 pip install boj-ts-api       # low-level client only (no pandas)
 ```
 
@@ -25,7 +26,7 @@ pip install boj-ts-api       # low-level client only (no pandas)
 ```python
 from pyboj import BOJ, Currency, Frequency
 
-boj = BOJ()
+boj = BOJ()  # defaults to Japanese (lang=Lang.JP)
 
 # Exchange rates — no magic strings
 rates = boj.exchange_rates(
@@ -33,29 +34,25 @@ rates = boj.exchange_rates(
     frequency=Frequency.D,
     start_date="202401",
 )
-for r in rates:
-    print(r.currency_pair, r.rate_type, r.values[:3])
-    df = r.to_dataframe()  # pandas DataFrame
+r = rates[0]
+print(r.currency_pair, r.rate_type, r.values[:3])
+df = r.to_dataframe()  # pandas DataFrame
 
-# Interest rates
+# One-liner plot with Japanese labels
+r.plot()  # auto title & ylabel from series metadata
+```
+
+```python
+# All 13 BOJ categories supported
 rates = boj.interest_rates(frequency=Frequency.D)
-for r in rates:
-    print(r.rate_category, r.collateralization, r.tenor)
-
-# TANKAN survey
-from pyboj import TankanIndustry, TankanSize
-results = boj.tankan(
-    industry=TankanIndustry.MANUFACTURING,
-    size=TankanSize.LARGE,
-)
-
-# Price indices
 indices = boj.price_indices(start_date="202401")
-
-# Balance of payments, Money/Deposits, Loans, and more
 bop = boj.balance_of_payments()
 money = boj.money_deposits()
 loans = boj.loans()
+
+# Use lang=Lang.EN for English labels
+from pyboj import Lang
+boj_en = BOJ(lang=Lang.EN)
 ```
 
 ## API Overview
@@ -96,6 +93,7 @@ Every domain object inherits from `Series`:
 | `dates` | `list[datetime.date]` | Parsed survey dates |
 | `values` | `list[float \| None]` | Numeric values |
 | `to_dataframe()` | `DataFrame` | pandas DataFrame with DatetimeIndex |
+| `plot()` | `Axes` | One-liner matplotlib plot (`pip install pyboj[plot]`) |
 
 Subclasses add domain-specific properties (e.g. `ExchangeRate.currency_pair`, `InterestRate.tenor`, `PriceIndex.base_year`).
 
@@ -121,6 +119,8 @@ Named constants for all BOJ database codes — use instead of magic strings:
 ## Features
 
 - **`BOJ` client** — typed domain methods for all 13 BOJ categories (43 databases)
+- **Japanese-first** — defaults to `Lang.JP`; use `Lang.EN` for English
+- **Built-in plotting** — `series.plot()` with Japanese labels and `japanize-matplotlib` (`pip install pyboj[plot]`)
 - **Enum-driven filtering** — `Currency`, `RateType`, `TankanIndustry`, `BopAccount`, etc.
 - **Domain wrappers** — `ExchangeRate`, `InterestRate`, `PriceIndex`, `Tankan`, and more
 - **Metadata-driven** — auto-fetches metadata and filters series by your criteria
@@ -135,6 +135,7 @@ Named constants for all BOJ database codes — use instead of magic strings:
 | Package | Install | Description |
 |---------|---------|-------------|
 | **pyboj** | `pip install pyboj` | High-level client with domain wrappers (includes pandas) |
+| **pyboj[plot]** | `pip install pyboj[plot]` | + matplotlib & japanize-matplotlib for `series.plot()` |
 | **boj-ts-api** | `pip install boj-ts-api` | Low-level typed API client |
 
 ## Low-Level API

@@ -3,7 +3,8 @@
 ## Installation
 
 ```bash
-pip install pyboj
+pip install pyboj            # includes pandas
+pip install pyboj[plot]      # + matplotlib & japanize-matplotlib for built-in plotting
 ```
 
 For direct low-level API access only:
@@ -14,14 +15,14 @@ pip install boj-ts-api
 
 ## High-Level API (Recommended)
 
-The `BOJ` client provides typed domain methods for all 13 BOJ data categories. Every parameter is an enum — no magic strings.
+The `BOJ` client provides typed domain methods for all 13 BOJ data categories. Every parameter is an enum — no magic strings. The client defaults to Japanese (`Lang.JP`); pass `lang=Lang.EN` for English.
 
 ### Exchange Rates
 
 ```python
 from pyboj import BOJ, Currency, Frequency
 
-boj = BOJ()
+boj = BOJ()  # defaults to Japanese labels
 
 # Filter by currency pair and frequency
 rates = boj.exchange_rates(
@@ -222,6 +223,40 @@ boj = BOJ()
 records = boj.metadata(Database.EXCHANGE_RATES)
 for rec in records[:5]:
     print(rec.SERIES_CODE, rec.FREQUENCY, rec.NAME_OF_TIME_SERIES)
+```
+
+## Plotting
+
+Every `Series` object has a built-in `.plot()` method (requires `pip install pyboj[plot]`). Labels use the same language as the `BOJ` client.
+
+```python
+from pyboj import BOJ, Currency, Frequency
+
+boj = BOJ()  # defaults to Japanese → plot labels are Japanese
+rates = boj.exchange_rates(currency=Currency.USD_JPY, frequency=Frequency.D, start_date="202401")
+rates[0].plot()  # auto-title, auto-ylabel from series metadata
+```
+
+Override the language per plot:
+
+```python
+from pyboj import Lang
+
+rates[0].plot(lang=Lang.EN)  # English labels for this plot
+```
+
+Plot multiple series together with `plot_series`:
+
+```python
+from pyboj import plot_series
+
+plot_series(rates[0], rates[1], title="Exchange Rates")
+```
+
+Customize with any `matplotlib` keyword arguments:
+
+```python
+rates[0].plot(figsize=(12, 6), title="Custom Title", ylabel="JPY", color="red")
 ```
 
 ## Advanced: Low-Level API

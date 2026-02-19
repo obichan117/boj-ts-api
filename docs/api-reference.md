@@ -48,6 +48,7 @@
         - dates
         - values
         - to_dataframe
+        - plot
 
 ### ExchangeRate
 
@@ -222,6 +223,12 @@
 ::: boj_ts_api._types.exceptions.BOJRequestError
 
 ::: boj_ts_api._types.exceptions.BOJValidationError
+
+## Plotting
+
+::: pyboj._plotting._plot.plot_series
+
+::: pyboj._plotting._plot.set_default_lang
 
 ## Utilities
 

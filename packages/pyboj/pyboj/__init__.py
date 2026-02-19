@@ -61,6 +61,7 @@ from pyboj._domains import (
 )
 from pyboj._helpers.csv import csv_to_dataframe
 from pyboj._helpers.layer_tree import LayerNode, build_layer_tree, search_metadata
+from pyboj._plotting import plot_series
 
 __all__ = [
     "AccountSide",
@@ -120,5 +121,6 @@ __all__ = [
     "TankanTiming",
     "build_layer_tree",
     "csv_to_dataframe",
+    "plot_series",
     "search_metadata",
 ]

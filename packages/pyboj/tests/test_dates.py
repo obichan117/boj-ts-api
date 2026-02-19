@@ -47,3 +47,11 @@ class TestParseSurveyDates:
 
     def test_empty_list(self):
         assert parse_survey_dates([]) == []
+
+    def test_none_entries_preserved(self):
+        result = parse_survey_dates([20240104, None, 202402])
+        assert result == [
+            datetime.date(2024, 1, 4),
+            None,
+            datetime.date(2024, 2, 1),
+        ]

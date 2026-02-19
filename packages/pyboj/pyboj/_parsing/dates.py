@@ -46,12 +46,15 @@ def parse_survey_date(raw: int | str) -> datetime.date:
     raise ValueError(msg)
 
 
-def parse_survey_dates(raw_dates: list[int | str]) -> list[datetime.date]:
+def parse_survey_dates(
+    raw_dates: list[int | str | None],
+) -> list[datetime.date | None]:
     """Parse a list of BOJ survey dates.
 
     Parameters
     ----------
     raw_dates:
         List of raw survey date values from :pyattr:`SeriesValues.SURVEY_DATES`.
+        ``None`` entries are preserved as ``None`` in the output.
     """
-    return [parse_survey_date(d) for d in raw_dates]
+    return [parse_survey_date(d) if d is not None else None for d in raw_dates]

@@ -9,6 +9,10 @@ Python client for the [Bank of Japan Time-Series Statistics API](https://www.sta
 
 Wraps the official BOJ API ([announced 2026-02-18](https://www.boj.or.jp/statistics/outline/notice_2026/not260218a.htm)) for machine-readable access to Japan's central bank time-series data.
 
+<p align="center">
+  <img src="docs/assets/summary.png" alt="pyboj summary" width="100%">
+</p>
+
 ## Installation
 
 ```bash

@@ -6,7 +6,7 @@ from collections.abc import Callable
 from typing import TypeVar
 
 from boj_ts_api import Client, Frequency, Lang, MetadataRecord, MetadataResponse
-from boj_ts_api._types.config import DEFAULT_TIMEOUT, MAX_SERIES_PER_REQUEST
+from boj_ts_api._types.config import DEFAULT_TIMEOUT
 
 from pyboj._config import Database
 from pyboj._domains._base import Series
@@ -162,9 +162,21 @@ class BOJ:
 
         db_str = db.value if isinstance(db, Database) else db
         results: list[_T] = []
-        # Batch codes in groups of MAX_SERIES_PER_REQUEST (250)
-        for i in range(0, len(codes), MAX_SERIES_PER_REQUEST):
-            batch = codes[i : i + MAX_SERIES_PER_REQUEST]
+        # Batch codes so that the comma-separated string stays under the URL
+        # length limit of the BOJ API.  We cap the code parameter at 1000
+        # characters to leave room for the rest of the URL (path, other params).
+        max_code_len = 1000
+        batches: list[list[str]] = [[]]
+        cur_len = 0
+        for code in codes:
+            added_len = len(code) + (1 if batches[-1] else 0)  # comma separator
+            if batches[-1] and cur_len + added_len > max_code_len:
+                batches.append([])
+                cur_len = 0
+            batches[-1].append(code)
+            cur_len += added_len
+
+        for batch in batches:
             code_str = ",".join(batch)
             for sr in self._client.iter_data_code(
                 db=db_str, code=code_str, start_date=start_date, end_date=end_date

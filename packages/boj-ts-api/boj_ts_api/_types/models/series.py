@@ -10,7 +10,7 @@ from boj_ts_api._types.models.base import BOJBaseModel
 class SeriesValues(BOJBaseModel):
     """Nested time-series values within a series result."""
 
-    SURVEY_DATES: list[int | str] = Field(default_factory=list)
+    SURVEY_DATES: list[int | str | None] = Field(default_factory=list)
     VALUES: list[float | str | None] = Field(default_factory=list)
 
 

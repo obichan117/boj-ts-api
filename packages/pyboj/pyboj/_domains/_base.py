@@ -63,19 +63,34 @@ class Series:
 
     @property
     def dates(self) -> list[datetime.date]:
-        """Survey dates parsed into :class:`datetime.date` objects."""
-        return parse_survey_dates(self._result.VALUES.SURVEY_DATES)
+        """Survey dates parsed into :class:`datetime.date` objects.
+
+        Entries where the raw date is ``None`` are excluded, along with their
+        corresponding values, to keep dates and values aligned.
+        """
+        return [d for d, _ in self._aligned_pairs()]
 
     @property
     def values(self) -> list[float | None]:
-        """Numeric values with non-numeric entries converted to ``None``."""
-        out: list[float | None] = []
-        for v in self._result.VALUES.VALUES:
+        """Numeric values with non-numeric entries converted to ``None``.
+
+        Entries where the corresponding date is ``None`` are excluded.
+        """
+        return [v for _, v in self._aligned_pairs()]
+
+    def _aligned_pairs(self) -> list[tuple[datetime.date, float | None]]:
+        """Return aligned (date, value) pairs, skipping entries with None dates."""
+        raw_dates = parse_survey_dates(self._result.VALUES.SURVEY_DATES)
+        raw_values = self._result.VALUES.VALUES
+        pairs: list[tuple[datetime.date, float | None]] = []
+        for d, v in zip(raw_dates, raw_values, strict=False):
+            if d is None:
+                continue
             if v is None or isinstance(v, str):
-                out.append(None)
+                pairs.append((d, None))
             else:
-                out.append(float(v))
-        return out
+                pairs.append((d, float(v)))
+        return pairs
 
     # ── Output ────────────────────────────────────────────────────────
 
@@ -89,8 +104,9 @@ class Series:
         """
         import pandas as pd
 
-        index = pd.DatetimeIndex(self.dates, name="date")
-        return pd.DataFrame({"value": self.values}, index=index)
+        pairs = self._aligned_pairs()
+        index = pd.DatetimeIndex([d for d, _ in pairs], name="date")
+        return pd.DataFrame({"value": [v for _, v in pairs]}, index=index)
 
     # ── Display ───────────────────────────────────────────────────────
 

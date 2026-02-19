@@ -86,6 +86,36 @@ class TestRepr:
         assert "observations=2" in r
 
 
+class TestNoneDates:
+    def test_none_dates_skipped(self):
+        result = SeriesResult.model_validate({
+            "SERIES_CODE": "TEST01",
+            "NAME_OF_TIME_SERIES": "U.S.dollar/Yen Rate",
+            "VALUES": {
+                "SURVEY_DATES": [20240104, None, 20240106],
+                "VALUES": [141.75, 142.0, 143.5],
+            },
+        })
+        rate = ExchangeRate(result)
+        assert rate.dates == [datetime.date(2024, 1, 4), datetime.date(2024, 1, 6)]
+        assert rate.values == [141.75, 143.5]
+
+    def test_none_dates_dataframe(self):
+        pytest.importorskip("pandas")
+        result = SeriesResult.model_validate({
+            "SERIES_CODE": "TEST01",
+            "NAME_OF_TIME_SERIES": "U.S.dollar/Yen Rate",
+            "VALUES": {
+                "SURVEY_DATES": [20240104, None, 20240106],
+                "VALUES": [141.75, 142.0, 143.5],
+            },
+        })
+        rate = ExchangeRate(result)
+        df = rate.to_dataframe()
+        assert len(df) == 2
+        assert df["value"].tolist() == [141.75, 143.5]
+
+
 class TestToDataframe:
     def test_dataframe_shape(self, exchange_rate_results):
         pytest.importorskip("pandas")

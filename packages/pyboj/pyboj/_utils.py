@@ -4,22 +4,23 @@ from __future__ import annotations
 
 from boj_ts_api import Frequency
 
-# Map Frequency enum values to prefix(es) expected in BOJ response FREQUENCY field.
+# Map Frequency enum values to expected BOJ response FREQUENCY field values.
 # BOJ returns: DAILY, WEEKLY(MON), MONTHLY, QUARTERLY,
-#              SEMIANNUAL(CY), SEMIANNUAL(FY), ANNUAL(CY), ANNUAL(FY)
-# TODO: verify annual/semi-annual values against live API. The official manual
-#       documents ANNUAL / ANNUAL(MAR) and SEMIANNUAL / SEMIANNUAL(SEP), which
-#       differs from the ANNUAL(CY) / ANNUAL(FY) values used below.
+#              SEMIANNUAL, SEMIANNUAL(SEP), ANNUAL, ANNUAL(MAR)
+# Source: official API manual (https://www.stat-search.boj.or.jp/info/api_manual.pdf)
 _FREQUENCY_PREFIX: dict[str, str] = {
     "D": "DAILY",
     "W": "WEEKLY",
     "M": "MONTHLY",
     "Q": "QUARTERLY",
-    "CH": "SEMIANNUAL(CY)",
-    "FH": "SEMIANNUAL(FY)",
-    "CY": "ANNUAL(CY)",
-    "FY": "ANNUAL(FY)",
+    "CH": "SEMIANNUAL",
+    "FH": "SEMIANNUAL(SEP)",
+    "CY": "ANNUAL",
+    "FY": "ANNUAL(MAR)",
 }
+
+# Frequencies that use prefix matching (have parenthesized variants)
+_PREFIX_MATCH = frozenset({Frequency.W, Frequency.CH, Frequency.CY})
 
 
 def frequency_matches(response_freq: str | None, request_freq: Frequency) -> bool:
@@ -32,7 +33,8 @@ def frequency_matches(response_freq: str | None, request_freq: Frequency) -> boo
         return False
     expected = _FREQUENCY_PREFIX.get(request_freq.value, "")
     upper = response_freq.upper()
-    # WEEKLY needs prefix match (WEEKLY(MON), WEEKLY(FRI), etc.)
-    if request_freq is Frequency.W:
-        return upper.startswith("WEEKLY")
+    # WEEKLY, SEMIANNUAL (CH), ANNUAL (CY) use prefix matching to handle
+    # parenthesized variants (e.g. WEEKLY(MON), SEMIANNUAL(SEP), ANNUAL(MAR))
+    if request_freq in _PREFIX_MATCH:
+        return upper.startswith(expected)
     return upper == expected

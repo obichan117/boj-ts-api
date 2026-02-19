@@ -5,13 +5,18 @@ from __future__ import annotations
 import respx
 from boj_ts_api._types.config import BASE_URL, ENDPOINT_DATA_CODE, ENDPOINT_METADATA
 from pyboj import BOJ, Currency, Database, Frequency, RateType
-from pyboj._domains._base import Series
 from pyboj._domains.balance_of_payments import BalanceOfPayments, BopAccount
+from pyboj._domains.balance_sheet import BalanceSheet, InstitutionType
+from pyboj._domains.boj_operation import BOJOperation
 from pyboj._domains.exchange_rate import ExchangeRate
+from pyboj._domains.financial_market import FinancialMarket
+from pyboj._domains.flow_of_funds import FlowOfFunds
 from pyboj._domains.interest_rate import InterestRate, RateCategory
+from pyboj._domains.international_stat import InternationalStat
 from pyboj._domains.loan import Loan
 from pyboj._domains.money_deposit import MoneyDeposit
 from pyboj._domains.price_index import IndexType, PriceIndex
+from pyboj._domains.public_finance import PublicFinance
 from pyboj._domains.tankan import Tankan, TankanIndustry
 from pyboj._utils import frequency_matches
 
@@ -312,7 +317,7 @@ METADATA_BS01 = {
     "RESULTSET": [
         {
             "SERIES_CODE": "BS01_A",
-            "NAME_OF_TIME_SERIES": "BOJ Account Balance",
+            "NAME_OF_TIME_SERIES": "Bank of Japan Total Assets",
             "FREQUENCY": "MONTHLY",
         },
     ],
@@ -328,9 +333,174 @@ DATA_BS01 = {
     "RESULTSET": [
         {
             "SERIES_CODE": "BS01_A",
-            "NAME_OF_TIME_SERIES": "BOJ Account Balance",
+            "NAME_OF_TIME_SERIES": "Bank of Japan Total Assets",
             "FREQUENCY": "MONTHLY",
             "VALUES": {"SURVEY_DATES": [202401], "VALUES": [5000.0]},
+        },
+    ],
+}
+
+METADATA_FM03 = {
+    "STATUS": 200,
+    "MESSAGEID": "M181000I",
+    "MESSAGE": "",
+    "DATE": "2025-12-02T14:00:00.000+09:00",
+    "PARAMETER": {"db": "FM03", "format": "json", "lang": "en"},
+    "NEXTPOSITION": None,
+    "RESULTSET": [
+        {
+            "SERIES_CODE": "FM03_01",
+            "NAME_OF_TIME_SERIES": "Call Money Outstanding Amount",
+            "FREQUENCY": "MONTHLY",
+        },
+    ],
+}
+
+DATA_FM03 = {
+    "STATUS": 200,
+    "MESSAGEID": "M181000I",
+    "MESSAGE": "",
+    "DATE": "2025-12-02T13:00:00.000+09:00",
+    "PARAMETER": {"db": "FM03", "code": "FM03_01", "format": "json", "lang": "en"},
+    "NEXTPOSITION": None,
+    "RESULTSET": [
+        {
+            "SERIES_CODE": "FM03_01",
+            "NAME_OF_TIME_SERIES": "Call Money Outstanding Amount",
+            "FREQUENCY": "MONTHLY",
+            "VALUES": {"SURVEY_DATES": [202401], "VALUES": [30000.0]},
+        },
+    ],
+}
+
+METADATA_FF = {
+    "STATUS": 200,
+    "MESSAGEID": "M181000I",
+    "MESSAGE": "",
+    "DATE": "2025-12-02T14:00:00.000+09:00",
+    "PARAMETER": {"db": "FF", "format": "json", "lang": "en"},
+    "NEXTPOSITION": None,
+    "RESULTSET": [
+        {
+            "SERIES_CODE": "FF_HH",
+            "NAME_OF_TIME_SERIES": "Household Financial Assets, Currency and Deposits",
+            "FREQUENCY": "QUARTERLY",
+        },
+    ],
+}
+
+DATA_FF = {
+    "STATUS": 200,
+    "MESSAGEID": "M181000I",
+    "MESSAGE": "",
+    "DATE": "2025-12-02T13:00:00.000+09:00",
+    "PARAMETER": {"db": "FF", "code": "FF_HH", "format": "json", "lang": "en"},
+    "NEXTPOSITION": None,
+    "RESULTSET": [
+        {
+            "SERIES_CODE": "FF_HH",
+            "NAME_OF_TIME_SERIES": "Household Financial Assets, Currency and Deposits",
+            "FREQUENCY": "QUARTERLY",
+            "VALUES": {"SURVEY_DATES": [20240301], "VALUES": [1100000.0]},
+        },
+    ],
+}
+
+METADATA_OB01 = {
+    "STATUS": 200,
+    "MESSAGEID": "M181000I",
+    "MESSAGE": "",
+    "DATE": "2025-12-02T14:00:00.000+09:00",
+    "PARAMETER": {"db": "OB01", "format": "json", "lang": "en"},
+    "NEXTPOSITION": None,
+    "RESULTSET": [
+        {
+            "SERIES_CODE": "OB01_TR",
+            "NAME_OF_TIME_SERIES": "Treasury Receipts",
+            "FREQUENCY": "DAILY",
+        },
+    ],
+}
+
+DATA_OB01 = {
+    "STATUS": 200,
+    "MESSAGEID": "M181000I",
+    "MESSAGE": "",
+    "DATE": "2025-12-02T13:00:00.000+09:00",
+    "PARAMETER": {"db": "OB01", "code": "OB01_TR", "format": "json", "lang": "en"},
+    "NEXTPOSITION": None,
+    "RESULTSET": [
+        {
+            "SERIES_CODE": "OB01_TR",
+            "NAME_OF_TIME_SERIES": "Treasury Receipts",
+            "FREQUENCY": "DAILY",
+            "VALUES": {"SURVEY_DATES": [20240104], "VALUES": [2500.0]},
+        },
+    ],
+}
+
+METADATA_PF01 = {
+    "STATUS": 200,
+    "MESSAGEID": "M181000I",
+    "MESSAGE": "",
+    "DATE": "2025-12-02T14:00:00.000+09:00",
+    "PARAMETER": {"db": "PF01", "format": "json", "lang": "en"},
+    "NEXTPOSITION": None,
+    "RESULTSET": [
+        {
+            "SERIES_CODE": "PF01_TAX",
+            "NAME_OF_TIME_SERIES": "Tax Revenue",
+            "FREQUENCY": "MONTHLY",
+        },
+    ],
+}
+
+DATA_PF01 = {
+    "STATUS": 200,
+    "MESSAGEID": "M181000I",
+    "MESSAGE": "",
+    "DATE": "2025-12-02T13:00:00.000+09:00",
+    "PARAMETER": {"db": "PF01", "code": "PF01_TAX", "format": "json", "lang": "en"},
+    "NEXTPOSITION": None,
+    "RESULTSET": [
+        {
+            "SERIES_CODE": "PF01_TAX",
+            "NAME_OF_TIME_SERIES": "Tax Revenue",
+            "FREQUENCY": "MONTHLY",
+            "VALUES": {"SURVEY_DATES": [202401], "VALUES": [5500.0]},
+        },
+    ],
+}
+
+METADATA_BIS = {
+    "STATUS": 200,
+    "MESSAGEID": "M181000I",
+    "MESSAGE": "",
+    "DATE": "2025-12-02T14:00:00.000+09:00",
+    "PARAMETER": {"db": "BIS", "format": "json", "lang": "en"},
+    "NEXTPOSITION": None,
+    "RESULTSET": [
+        {
+            "SERIES_CODE": "BIS_01",
+            "NAME_OF_TIME_SERIES": "BIS International Banking Statistics",
+            "FREQUENCY": "QUARTERLY",
+        },
+    ],
+}
+
+DATA_BIS = {
+    "STATUS": 200,
+    "MESSAGEID": "M181000I",
+    "MESSAGE": "",
+    "DATE": "2025-12-02T13:00:00.000+09:00",
+    "PARAMETER": {"db": "BIS", "code": "BIS_01", "format": "json", "lang": "en"},
+    "NEXTPOSITION": None,
+    "RESULTSET": [
+        {
+            "SERIES_CODE": "BIS_01",
+            "NAME_OF_TIME_SERIES": "BIS International Banking Statistics",
+            "FREQUENCY": "QUARTERLY",
+            "VALUES": {"SURVEY_DATES": [20240301], "VALUES": [100.0]},
         },
     ],
 }
@@ -375,10 +545,16 @@ class TestFrequencyMatches:
         assert frequency_matches("QUARTERLY", Frequency.Q) is True
 
     def test_annual_cy(self):
-        assert frequency_matches("ANNUAL(CY)", Frequency.CY) is True
+        assert frequency_matches("ANNUAL", Frequency.CY) is True
+
+    def test_annual_cy_variant(self):
+        assert frequency_matches("ANNUAL(MAR)", Frequency.CY) is True
 
     def test_annual_fy(self):
-        assert frequency_matches("ANNUAL(FY)", Frequency.FY) is True
+        assert frequency_matches("ANNUAL(MAR)", Frequency.FY) is True
+
+    def test_annual_fy_no_match_plain(self):
+        assert frequency_matches("ANNUAL", Frequency.FY) is False
 
     def test_mismatch(self):
         assert frequency_matches("DAILY", Frequency.M) is False
@@ -387,10 +563,16 @@ class TestFrequencyMatches:
         assert frequency_matches(None, Frequency.D) is False
 
     def test_semiannual_cy(self):
-        assert frequency_matches("SEMIANNUAL(CY)", Frequency.CH) is True
+        assert frequency_matches("SEMIANNUAL", Frequency.CH) is True
+
+    def test_semiannual_cy_variant(self):
+        assert frequency_matches("SEMIANNUAL(SEP)", Frequency.CH) is True
 
     def test_semiannual_fy(self):
-        assert frequency_matches("SEMIANNUAL(FY)", Frequency.FH) is True
+        assert frequency_matches("SEMIANNUAL(SEP)", Frequency.FH) is True
+
+    def test_semiannual_fy_no_match_plain(self):
+        assert frequency_matches("SEMIANNUAL", Frequency.FH) is False
 
 
 class TestBOJContextManager:
@@ -568,13 +750,74 @@ class TestLoans:
         boj.close()
 
 
-class TestLightWrappers:
+class TestFinancialMarkets:
     @respx.mock
-    def test_balance_sheets(self):
+    def test_basic(self):
+        _mock_metadata(respx, "FM03", METADATA_FM03)
+        _mock_data(respx, "FM03", DATA_FM03)
+        boj = BOJ()
+        results = boj.financial_markets(db=Database.SHORT_TERM_MONEY_OUTSTANDING)
+        assert len(results) == 1
+        assert isinstance(results[0], FinancialMarket)
+        boj.close()
+
+
+class TestBalanceSheets:
+    @respx.mock
+    def test_basic(self):
         _mock_metadata(respx, "BS01", METADATA_BS01)
         _mock_data(respx, "BS01", DATA_BS01)
         boj = BOJ()
         results = boj.balance_sheets()
         assert len(results) == 1
-        assert isinstance(results[0], Series)
+        assert isinstance(results[0], BalanceSheet)
+        assert results[0].institution_type == InstitutionType.BOJ
+        boj.close()
+
+
+class TestFlowOfFunds:
+    @respx.mock
+    def test_basic(self):
+        _mock_metadata(respx, "FF", METADATA_FF)
+        _mock_data(respx, "FF", DATA_FF)
+        boj = BOJ()
+        results = boj.flow_of_funds()
+        assert len(results) == 1
+        assert isinstance(results[0], FlowOfFunds)
+        boj.close()
+
+
+class TestBOJOperations:
+    @respx.mock
+    def test_basic(self):
+        _mock_metadata(respx, "OB01", METADATA_OB01)
+        _mock_data(respx, "OB01", DATA_OB01)
+        boj = BOJ()
+        results = boj.boj_operations()
+        assert len(results) == 1
+        assert isinstance(results[0], BOJOperation)
+        boj.close()
+
+
+class TestPublicFinance:
+    @respx.mock
+    def test_basic(self):
+        _mock_metadata(respx, "PF01", METADATA_PF01)
+        _mock_data(respx, "PF01", DATA_PF01)
+        boj = BOJ()
+        results = boj.public_finance()
+        assert len(results) == 1
+        assert isinstance(results[0], PublicFinance)
+        boj.close()
+
+
+class TestInternational:
+    @respx.mock
+    def test_basic(self):
+        _mock_metadata(respx, "BIS", METADATA_BIS)
+        _mock_data(respx, "BIS", DATA_BIS)
+        boj = BOJ()
+        results = boj.international()
+        assert len(results) == 1
+        assert isinstance(results[0], InternationalStat)
         boj.close()

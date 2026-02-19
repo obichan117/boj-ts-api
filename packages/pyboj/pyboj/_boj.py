@@ -11,12 +11,34 @@ from boj_ts_api._types.config import DEFAULT_TIMEOUT, MAX_SERIES_PER_REQUEST
 from pyboj._config import Database
 from pyboj._domains._base import Series
 from pyboj._domains.balance_of_payments import BalanceOfPayments, BopAccount
+from pyboj._domains.balance_sheet import (
+    AccountSide,
+    BalanceSheet,
+    InstitutionType,
+    _detect_institution,
+    _detect_side,
+)
+from pyboj._domains.boj_operation import BOJOperation, OperationType, _detect_operation
 from pyboj._domains.exchange_rate import (
     Currency,
     ExchangeRate,
     RateType,
     _detect_currency,
     _detect_rate_type,
+)
+from pyboj._domains.financial_market import (
+    FinancialMarket,
+    InstrumentType,
+    MarketSegment,
+    _detect_instrument,
+    _detect_segment,
+)
+from pyboj._domains.flow_of_funds import (
+    FlowOfFunds,
+    FofInstrument,
+    FofSector,
+    _detect_fof_instrument,
+    _detect_fof_sector,
 )
 from pyboj._domains.interest_rate import (
     Collateralization,
@@ -25,9 +47,15 @@ from pyboj._domains.interest_rate import (
     _detect_collateralization,
     _detect_rate_category,
 )
+from pyboj._domains.international_stat import (
+    InternationalStat,
+    StatCategory,
+    _detect_stat_category,
+)
 from pyboj._domains.loan import IndustrySector, Loan
 from pyboj._domains.money_deposit import Adjustment, MonetaryComponent, MoneyDeposit
 from pyboj._domains.price_index import IndexType, PriceIndex, _detect_index_type
+from pyboj._domains.public_finance import FiscalItem, PublicFinance, _detect_fiscal_item
 from pyboj._domains.tankan import (
     Tankan,
     TankanIndustry,
@@ -36,6 +64,7 @@ from pyboj._domains.tankan import (
     TankanSize,
     TankanTiming,
 )
+from pyboj._helpers.layer_tree import LayerNode, build_layer_tree, search_metadata
 from pyboj._utils import frequency_matches
 
 _T = TypeVar("_T", bound=Series)
@@ -142,24 +171,6 @@ class BOJ:
             ):
                 results.append(wrapper(sr))
         return results
-
-    def _simple_fetch(
-        self,
-        db: str | Database,
-        *,
-        frequency: Frequency | None = None,
-        start_date: str | None = None,
-        end_date: str | None = None,
-    ) -> list[Series]:
-        """Fetch all series from a database, optionally filtered by frequency."""
-        return self._filter_and_fetch(
-            db,
-            lambda _rec: True,
-            Series,
-            frequency=frequency,
-            start_date=start_date,
-            end_date=end_date,
-        )
 
     # ── Domain methods ───────────────────────────────────────────────
 
@@ -441,20 +452,26 @@ class BOJ:
             frequency=frequency, start_date=start_date, end_date=end_date,
         )
 
-    # ── Light wrappers (return list[Series]) ─────────────────────────
+    # ── Rich wrappers (formerly light wrappers) ──────────────────────
 
     def financial_markets(
         self,
         *,
+        segment: MarketSegment | None = None,
+        instrument_type: InstrumentType | None = None,
         frequency: Frequency | None = None,
         start_date: str | None = None,
         end_date: str | None = None,
         db: Database = Database.SHORT_TERM_MONEY_OUTSTANDING,
-    ) -> list[Series]:
+    ) -> list[FinancialMarket]:
         """Fetch financial markets series (FM03-FM07).
 
         Parameters
         ----------
+        segment:
+            Filter by market segment (e.g. ``MarketSegment.GOVT_BONDS``).
+        instrument_type:
+            Filter by instrument type (e.g. ``InstrumentType.OUTSTANDING``).
         frequency:
             Filter by frequency.
         start_date:
@@ -464,22 +481,36 @@ class BOJ:
         db:
             Database to query. Default: FM03.
         """
-        return self._simple_fetch(
-            db, frequency=frequency, start_date=start_date, end_date=end_date,
+
+        def predicate(rec: MetadataRecord) -> bool:
+            name = rec.NAME_OF_TIME_SERIES or ""
+            if segment is not None and _detect_segment(name) != segment:
+                return False
+            return instrument_type is None or _detect_instrument(name) == instrument_type
+
+        return self._filter_and_fetch(
+            db, predicate, FinancialMarket,
+            frequency=frequency, start_date=start_date, end_date=end_date,
         )
 
     def balance_sheets(
         self,
         *,
+        account_side: AccountSide | None = None,
+        institution_type: InstitutionType | None = None,
         frequency: Frequency | None = None,
         start_date: str | None = None,
         end_date: str | None = None,
         db: Database = Database.BOJ_ACCOUNTS,
-    ) -> list[Series]:
+    ) -> list[BalanceSheet]:
         """Fetch balance sheet series (BS01-BS02).
 
         Parameters
         ----------
+        account_side:
+            Filter by balance sheet side (e.g. ``AccountSide.ASSETS``).
+        institution_type:
+            Filter by institution type (e.g. ``InstitutionType.BOJ``).
         frequency:
             Filter by frequency.
         start_date:
@@ -489,21 +520,35 @@ class BOJ:
         db:
             Database to query. Default: BS01.
         """
-        return self._simple_fetch(
-            db, frequency=frequency, start_date=start_date, end_date=end_date,
+
+        def predicate(rec: MetadataRecord) -> bool:
+            name = rec.NAME_OF_TIME_SERIES or ""
+            if account_side is not None and _detect_side(name) != account_side:
+                return False
+            return institution_type is None or _detect_institution(name) == institution_type
+
+        return self._filter_and_fetch(
+            db, predicate, BalanceSheet,
+            frequency=frequency, start_date=start_date, end_date=end_date,
         )
 
     def flow_of_funds(
         self,
         *,
+        sector: FofSector | None = None,
+        instrument: FofInstrument | None = None,
         frequency: Frequency | None = None,
         start_date: str | None = None,
         end_date: str | None = None,
-    ) -> list[Series]:
+    ) -> list[FlowOfFunds]:
         """Fetch flow of funds series (FF).
 
         Parameters
         ----------
+        sector:
+            Filter by economic sector (e.g. ``FofSector.HOUSEHOLDS``).
+        instrument:
+            Filter by financial instrument (e.g. ``FofInstrument.EQUITY``).
         frequency:
             Filter by frequency.
         start_date:
@@ -511,22 +556,33 @@ class BOJ:
         end_date:
             End date in ``YYYYMM`` format.
         """
-        return self._simple_fetch(
-            Database.FLOW_OF_FUNDS, frequency=frequency, start_date=start_date, end_date=end_date,
+
+        def predicate(rec: MetadataRecord) -> bool:
+            name = rec.NAME_OF_TIME_SERIES or ""
+            if sector is not None and _detect_fof_sector(name) != sector:
+                return False
+            return instrument is None or _detect_fof_instrument(name) == instrument
+
+        return self._filter_and_fetch(
+            Database.FLOW_OF_FUNDS, predicate, FlowOfFunds,
+            frequency=frequency, start_date=start_date, end_date=end_date,
         )
 
     def boj_operations(
         self,
         *,
+        operation_type: OperationType | None = None,
         frequency: Frequency | None = None,
         start_date: str | None = None,
         end_date: str | None = None,
         db: Database = Database.GOVT_TRANSACTIONS,
-    ) -> list[Series]:
+    ) -> list[BOJOperation]:
         """Fetch BOJ operations series (OB01-OB02).
 
         Parameters
         ----------
+        operation_type:
+            Filter by operation type (e.g. ``OperationType.JGB_OPERATIONS``).
         frequency:
             Filter by frequency.
         start_date:
@@ -536,22 +592,34 @@ class BOJ:
         db:
             Database to query. Default: OB01.
         """
-        return self._simple_fetch(
-            db, frequency=frequency, start_date=start_date, end_date=end_date,
+
+        def predicate(rec: MetadataRecord) -> bool:
+            if operation_type is not None:
+                name = rec.NAME_OF_TIME_SERIES or ""
+                if _detect_operation(name) != operation_type:
+                    return False
+            return True
+
+        return self._filter_and_fetch(
+            db, predicate, BOJOperation,
+            frequency=frequency, start_date=start_date, end_date=end_date,
         )
 
     def public_finance(
         self,
         *,
+        fiscal_item: FiscalItem | None = None,
         frequency: Frequency | None = None,
         start_date: str | None = None,
         end_date: str | None = None,
         db: Database = Database.TREASURY_RECEIPTS_PAYMENTS,
-    ) -> list[Series]:
+    ) -> list[PublicFinance]:
         """Fetch public finance series (PF01-PF02).
 
         Parameters
         ----------
+        fiscal_item:
+            Filter by fiscal item (e.g. ``FiscalItem.TAX_REVENUE``).
         frequency:
             Filter by frequency.
         start_date:
@@ -561,22 +629,34 @@ class BOJ:
         db:
             Database to query. Default: PF01.
         """
-        return self._simple_fetch(
-            db, frequency=frequency, start_date=start_date, end_date=end_date,
+
+        def predicate(rec: MetadataRecord) -> bool:
+            if fiscal_item is not None:
+                name = rec.NAME_OF_TIME_SERIES or ""
+                if _detect_fiscal_item(name) != fiscal_item:
+                    return False
+            return True
+
+        return self._filter_and_fetch(
+            db, predicate, PublicFinance,
+            frequency=frequency, start_date=start_date, end_date=end_date,
         )
 
     def international(
         self,
         *,
+        stat_category: StatCategory | None = None,
         frequency: Frequency | None = None,
         start_date: str | None = None,
         end_date: str | None = None,
         db: Database = Database.BIS_BANKING_STATISTICS,
-    ) -> list[Series]:
+    ) -> list[InternationalStat]:
         """Fetch international statistics series (BIS, DER, PS01, PS02, OT).
 
         Parameters
         ----------
+        stat_category:
+            Filter by statistics category (e.g. ``StatCategory.DERIVATIVES``).
         frequency:
             Filter by frequency.
         start_date:
@@ -586,6 +666,51 @@ class BOJ:
         db:
             Database to query. Default: BIS.
         """
-        return self._simple_fetch(
-            db, frequency=frequency, start_date=start_date, end_date=end_date,
+
+        def predicate(rec: MetadataRecord) -> bool:
+            if stat_category is not None:
+                name = rec.NAME_OF_TIME_SERIES or ""
+                if _detect_stat_category(name) != stat_category:
+                    return False
+            return True
+
+        return self._filter_and_fetch(
+            db, predicate, InternationalStat,
+            frequency=frequency, start_date=start_date, end_date=end_date,
         )
+
+    # ── Discovery ────────────────────────────────────────────────────
+
+    def layer_tree(self, db: Database) -> LayerNode:
+        """Build a hierarchical layer tree from database metadata.
+
+        Parameters
+        ----------
+        db:
+            Database to build the tree for.
+
+        Returns
+        -------
+        LayerNode
+            Root node of the layer hierarchy.
+        """
+        records = self.metadata(db)
+        return build_layer_tree(records)
+
+    def search(self, db: Database, query: str) -> list[MetadataRecord]:
+        """Search metadata records by keyword.
+
+        Parameters
+        ----------
+        db:
+            Database to search.
+        query:
+            Case-insensitive search string.
+
+        Returns
+        -------
+        list[MetadataRecord]
+            Matching metadata records.
+        """
+        records = self.metadata(db)
+        return search_metadata(records, query)

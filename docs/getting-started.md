@@ -106,30 +106,98 @@ boj = BOJ()
 results = boj.loans(sector=IndustrySector.MANUFACTURING)
 ```
 
-### Light Wrappers
-
-These categories return generic `Series` objects with frequency filtering:
+### Financial Markets
 
 ```python
+from pyboj import BOJ, MarketSegment, InstrumentType, Database
+
+boj = BOJ()
+results = boj.financial_markets(
+    segment=MarketSegment.GOVT_BONDS,
+    db=Database.GOVT_BOND_TRADING,
+)
+for r in results:
+    print(r.segment, r.instrument_type)
+```
+
+### Balance Sheets
+
+```python
+from pyboj import BOJ, AccountSide, InstitutionType
+
+boj = BOJ()
+results = boj.balance_sheets(institution_type=InstitutionType.BOJ)
+for r in results:
+    print(r.account_side, r.institution_type)
+```
+
+### Flow of Funds
+
+```python
+from pyboj import BOJ, FofSector, FofInstrument
+
+boj = BOJ()
+results = boj.flow_of_funds(sector=FofSector.HOUSEHOLDS)
+for r in results:
+    print(r.sector, r.instrument)
+```
+
+### BOJ Operations
+
+```python
+from pyboj import BOJ, OperationType
+
+boj = BOJ()
+results = boj.boj_operations(operation_type=OperationType.JGB_OPERATIONS)
+for r in results:
+    print(r.operation_type)
+```
+
+### Public Finance
+
+```python
+from pyboj import BOJ, FiscalItem
+
+boj = BOJ()
+results = boj.public_finance(fiscal_item=FiscalItem.TAX_REVENUE)
+for r in results:
+    print(r.fiscal_item)
+```
+
+### International Statistics
+
+```python
+from pyboj import BOJ, StatCategory, Database
+
+boj = BOJ()
+results = boj.international(
+    stat_category=StatCategory.DERIVATIVES,
+    db=Database.DERIVATIVES_MARKET,
+)
+for r in results:
+    print(r.stat_category)
+```
+
+### Layer Tree & Search
+
+Explore database structure and discover series:
+
+```python
+from pyboj import BOJ, Database
+
 boj = BOJ()
 
-# Financial Markets (FM03-FM07)
-series = boj.financial_markets(db=Database.SHORT_TERM_MONEY_OUTSTANDING)
+# Build a hierarchical layer tree
+tree = boj.layer_tree(Database.EXCHANGE_RATES)
+for child in tree.children:
+    print(f"{child.name} ({len(child.series_codes)} series)")
+    for sub in child.children:
+        print(f"  {sub.name} ({len(sub.series_codes)} series)")
 
-# Balance Sheets (BS01-BS02)
-series = boj.balance_sheets(db=Database.BOJ_ACCOUNTS)
-
-# Flow of Funds
-series = boj.flow_of_funds()
-
-# BOJ Operations (OB01-OB02)
-series = boj.boj_operations()
-
-# Public Finance (PF01-PF02)
-series = boj.public_finance()
-
-# International (BIS, DER, PS01, PS02, OT)
-series = boj.international()
+# Search metadata by keyword
+results = boj.search(Database.EXCHANGE_RATES, "USD")
+for rec in results[:5]:
+    print(rec.SERIES_CODE, rec.NAME_OF_TIME_SERIES)
 ```
 
 ### Using the Database Enum

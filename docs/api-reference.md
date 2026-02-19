@@ -23,6 +23,8 @@
         - boj_operations
         - public_finance
         - international
+        - layer_tree
+        - search
 
 ### Database Enum
 
@@ -102,6 +104,60 @@
 ::: pyboj._domains.loan.Loan
 
 ::: pyboj._domains.loan.IndustrySector
+
+### FinancialMarket
+
+::: pyboj._domains.financial_market.FinancialMarket
+
+::: pyboj._domains.financial_market.MarketSegment
+
+::: pyboj._domains.financial_market.InstrumentType
+
+### BalanceSheet
+
+::: pyboj._domains.balance_sheet.BalanceSheet
+
+::: pyboj._domains.balance_sheet.AccountSide
+
+::: pyboj._domains.balance_sheet.InstitutionType
+
+### FlowOfFunds
+
+::: pyboj._domains.flow_of_funds.FlowOfFunds
+
+::: pyboj._domains.flow_of_funds.FofSector
+
+::: pyboj._domains.flow_of_funds.FofInstrument
+
+### BOJOperation
+
+::: pyboj._domains.boj_operation.BOJOperation
+
+::: pyboj._domains.boj_operation.OperationType
+
+### PublicFinance
+
+::: pyboj._domains.public_finance.PublicFinance
+
+::: pyboj._domains.public_finance.FiscalItem
+
+### InternationalStat
+
+::: pyboj._domains.international_stat.InternationalStat
+
+::: pyboj._domains.international_stat.StatCategory
+
+---
+
+## Discovery
+
+### Layer Tree
+
+::: pyboj._helpers.layer_tree.LayerNode
+
+::: pyboj._helpers.layer_tree.build_layer_tree
+
+::: pyboj._helpers.layer_tree.search_metadata
 
 ---
 

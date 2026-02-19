@@ -2,11 +2,13 @@
 
 from __future__ import annotations
 
+import logging
 from collections.abc import Callable
 from typing import TypeVar
 
 from boj_ts_api import Client, Frequency, Lang, MetadataRecord, MetadataResponse
 from boj_ts_api._types.config import DEFAULT_TIMEOUT
+from boj_ts_api._types.exceptions import BOJRequestError
 
 from pyboj._config import Database
 from pyboj._domains._base import Series
@@ -176,12 +178,16 @@ class BOJ:
             batches[-1].append(code)
             cur_len += added_len
 
+        logger = logging.getLogger(__name__)
         for batch in batches:
             code_str = ",".join(batch)
-            for sr in self._client.iter_data_code(
-                db=db_str, code=code_str, start_date=start_date, end_date=end_date
-            ):
-                results.append(wrapper(sr))
+            try:
+                for sr in self._client.iter_data_code(
+                    db=db_str, code=code_str, start_date=start_date, end_date=end_date
+                ):
+                    results.append(wrapper(sr))
+            except BOJRequestError as exc:
+                logger.debug("Batch request failed (db=%s, %d codes): %s", db_str, len(batch), exc)
         return results
 
     # ── Domain methods ───────────────────────────────────────────────

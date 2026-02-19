@@ -26,6 +26,7 @@ dev = [
     "pandas>=2.0",
     "twine>=6.0",
     "matplotlib>=3.10.8",
+    "build>=1.4.0",
 ]
 
 [tool.ruff]

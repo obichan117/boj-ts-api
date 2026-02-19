@@ -4,7 +4,7 @@ build-backend = "hatchling.build"
 
 [project]
 name = "pyboj"
-version = "0.1.0"
+version = "0.2.0"
 description = "Beginner-friendly Python client for the Bank of Japan Time-Series Statistics API"
 readme = "README.md"
 license = "MIT"
@@ -24,7 +24,7 @@ classifiers = [
     "Typing :: Typed",
 ]
 dependencies = [
-    "boj-ts-api",
+    "boj-ts-api>=0.2.0",
     "pandas>=2.0",
 ]
 
